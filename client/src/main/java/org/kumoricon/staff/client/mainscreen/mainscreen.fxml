@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox minHeight="480" minWidth="640" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kumoricon.staff.client.mainscreen.MainscreenPresenter">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem fx:id="menuRefresh" mnemonicParsing="false" text="Refresh" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="menuPreferences" mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#quitClicked" text="Quit" />
+          </items>
+        </Menu>
+        <!--<Menu mnemonicParsing="false" text="Edit">-->
+          <!--<items>-->
+            <!--<MenuItem mnemonicParsing="false" text="Undo" />-->
+            <!--<MenuItem mnemonicParsing="false" text="Redo" />-->
+            <!--<SeparatorMenuItem mnemonicParsing="false" />-->
+            <!--<MenuItem mnemonicParsing="false" text="Cut" />-->
+            <!--<MenuItem mnemonicParsing="false" text="Copy" />-->
+            <!--<MenuItem mnemonicParsing="false" text="Paste" />-->
+            <!--<MenuItem mnemonicParsing="false" text="Delete" />-->
+            <!--<SeparatorMenuItem mnemonicParsing="false" />-->
+            <!--<MenuItem mnemonicParsing="false" text="Select All" />-->
+            <!--<MenuItem mnemonicParsing="false" text="Unselect All" />-->
+          <!--</items>-->
+        <!--</Menu>-->
+        <!--<Menu mnemonicParsing="false" text="Help">-->
+          <!--<items>-->
+            <!--<MenuItem mnemonicParsing="false" text="About StaffReg" />-->
+          <!--</items>-->
+        <!--</Menu>-->
+      </menus>
+    </MenuBar>
+    <AnchorPane fx:id="rootPane" VBox.vgrow="ALWAYS">
+        <Label>Test</Label>
+    </AnchorPane>
+      <BorderPane id="footer" maxHeight="25.0" minHeight="25.0" prefHeight="25.0">
+         <left>
+            <Label fx:id="lblStatus" text="Status" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets left="10.0" />
+               </BorderPane.margin>
+            </Label>
+         </left>
+      </BorderPane>
+  </children>
+</VBox>
