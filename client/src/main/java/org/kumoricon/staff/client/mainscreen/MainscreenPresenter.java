@@ -4,12 +4,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.loginscreen.LoginView;
+import org.kumoricon.staff.client.preferencesscreen.PreferencesView;
 
 import javax.inject.Inject;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 
@@ -22,30 +23,32 @@ public class MainscreenPresenter implements Initializable {
     MenuItem menuRefresh, menuPreferences, menuQuit;
 
     @FXML
-    AnchorPane rootPane;
+    BorderPane rootPane;
 
     @Inject
-    private String prefix;
-
-    @Inject
-    private String happyEnding;
-
-    @Inject
-    private LocalDate date;
-
-    private String theVeryEnd;
+    private ViewModel viewModel;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lblStatus.setText("");
+        rootPane.centerProperty().bind(viewModel.mainViewProperty());
 
-        menuPreferences.setDisable(true);
-        menuRefresh.setDisable(true);
+        menuPreferences.disableProperty().bind(viewModel.preferencesMenuDisabledProperty());
+        menuRefresh.disableProperty().bind(viewModel.refreshMenuDisabledProperty());
+        goToLogin();
 
-        LoginView loginView = new LoginView();
-        loginView.getViewAsync(rootPane.getChildren()::add);
 
 //        this.theVeryEnd = rb.getString("theEnd");
+    }
+
+    private void goToLogin() {
+        LoginView loginView = new LoginView();
+        loginView.getViewAsync(viewModel::setMainView);
+    }
+
+    public void goToPreferences() {
+        PreferencesView view = new PreferencesView();
+        view.getViewAsync(viewModel::setMainView);
     }
 
     public void quitClicked() {

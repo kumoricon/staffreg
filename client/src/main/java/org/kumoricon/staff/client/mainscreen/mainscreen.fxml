@@ -18,7 +18,7 @@
           <items>
             <MenuItem fx:id="menuRefresh" mnemonicParsing="false" text="Refresh" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="menuPreferences" mnemonicParsing="false" text="Preferences…" />
+            <MenuItem fx:id="menuPreferences" mnemonicParsing="false" text="Preferences…" onAction="#goToPreferences" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#quitClicked" text="Quit" />
           </items>
@@ -44,9 +44,8 @@
         <!--</Menu>-->
       </menus>
     </MenuBar>
-    <AnchorPane fx:id="rootPane" VBox.vgrow="ALWAYS">
-        <Label>Test</Label>
-    </AnchorPane>
+    <BorderPane fx:id="rootPane" VBox.vgrow="ALWAYS" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+    </BorderPane>
       <BorderPane id="footer" maxHeight="25.0" minHeight="25.0" prefHeight="25.0">
          <left>
             <Label fx:id="lblStatus" text="Status" BorderPane.alignment="CENTER">

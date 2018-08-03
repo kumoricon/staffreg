@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane VBox.vgrow="ALWAYS" fx:controller="org.kumoricon.staff.client.preferencesscreen.PreferencesPresenter" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" >
+    <children>
+        <TextField fx:id="txtUsername" alignment="CENTER" layoutX="251.0" layoutY="66.0" prefHeight="26.0" prefWidth="370.0" promptText="Username" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="66.0" />
+        <Button fx:id="btnSave" defaultButton="true" layoutX="562.0" layoutY="209.0" mnemonicParsing="false" onAction="#saveClicked" text="Login" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="209.0" />
+        <Button fx:id="btnCancel" cancelButton="true" layoutX="484.0" layoutY="209.0" mnemonicParsing="false" onAction="#cancelClicked" text="Cancel" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="209.0" />
+    </children>
+</AnchorPane>
