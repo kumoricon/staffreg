@@ -8,7 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.kumoricon.staff.client.ViewModel;
-import org.kumoricon.staff.client.stafflist.StafflistView;
+import org.kumoricon.staff.client.stafflistscreen.StafflistView;
 
 
 import javax.inject.Inject;

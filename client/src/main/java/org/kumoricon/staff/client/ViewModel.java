@@ -5,12 +5,15 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import org.kumoricon.staff.client.model.Staff;
 
 public class ViewModel {
 
     private final ObjectProperty<Node> mainView = new SimpleObjectProperty(this, "mainView", null);
     private final BooleanProperty preferencesMenuDisabled = new SimpleBooleanProperty(this, "preferencesMenuDisabled", true);
     private final BooleanProperty refreshMenuDisabled = new SimpleBooleanProperty(this, "refreshMenuDisabled", true);
+
+    private final ObjectProperty<Staff> selectedStaff = new SimpleObjectProperty<>(this, "selectedStaff", null);
 
     public ObjectProperty<Node> mainViewProperty() {
         return mainView;
@@ -38,5 +41,13 @@ public class ViewModel {
     }
     public final BooleanProperty refreshMenuDisabledProperty() {
         return refreshMenuDisabled;
+    }
+
+    public final Staff getSelectedStaff() {
+        return selectedStaff.get();
+    }
+
+    public final void setSelectedStaff(Staff staff) {
+        selectedStaff.setValue(staff);
     }
 }

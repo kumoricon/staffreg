@@ -1,4 +1,4 @@
-package org.kumoricon.staff.client.stafflist;
+package org.kumoricon.staff.client.stafflistscreen.checkindetails;
 
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
@@ -6,7 +6,7 @@ import org.kumoricon.staff.client.model.Staff;
 
 import javax.annotation.PostConstruct;
 
-public class StafflistService {
+public class CheckinService {
     private final ObservableList<Staff> staffObservableList = new SimpleListProperty<>();
 
     @PostConstruct

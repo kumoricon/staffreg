@@ -1,4 +1,4 @@
-package org.kumoricon.staff.client.stafflist;
+package org.kumoricon.staff.client.stafflistscreen;
 
 
 import javafx.collections.FXCollections;
@@ -9,8 +9,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.model.Staff;
+import org.kumoricon.staff.client.stafflistscreen.checkindetails.CheckinDetailsView;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -27,6 +29,9 @@ public class StafflistPresenter implements Initializable {
 
     @FXML
     TableView<Staff> tblStaff;
+
+    @FXML
+    AnchorPane rightPane;
 
     @Inject
     ViewModel viewModel;
@@ -48,7 +53,6 @@ public class StafflistPresenter implements Initializable {
         for (int i = 1; i <= 5000; i++) {
             staffMasterList.add(new Staff("Guy"+i, "Congoer", "Registration", "XL"));
         }
-
     }
 
     public void filterChanged() {
@@ -69,10 +73,15 @@ public class StafflistPresenter implements Initializable {
             System.out.println("Staff clicked: " + tblStaff.getSelectionModel().getSelectedItem());
 
         }
+        viewModel.setSelectedStaff(selectedItem);
+        CheckinDetailsView details = new CheckinDetailsView();
+        details.getViewAsync(rightPane.getChildren()::setAll);
     }
 
     public void clearClicked() {
         // Reset filter
+        viewModel.setSelectedStaff(null);
+        rightPane.getChildren().removeAll(rightPane.getChildren());
         staffFilteredList.setPredicate(staff -> true);
         tblStaff.getSelectionModel().clearSelection();
         txtFilter.clear();

@@ -1,4 +1,4 @@
-package org.kumoricon.staff.client.stafflist;
+package org.kumoricon.staff.client.stafflistscreen;
 
 import com.airhacks.afterburner.views.FXMLView;
 
