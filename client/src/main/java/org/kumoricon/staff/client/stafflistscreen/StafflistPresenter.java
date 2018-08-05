@@ -13,6 +13,8 @@ import javafx.scene.layout.AnchorPane;
 import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.model.Staff;
 import org.kumoricon.staff.client.stafflistscreen.checkindetails.CheckinDetailsView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -23,6 +25,7 @@ public class StafflistPresenter implements Initializable {
     private ObservableList<Staff> staffMasterList = FXCollections.observableArrayList();
     private FilteredList<Staff> staffFilteredList = new FilteredList<>(staffMasterList, p -> true);
     private SortedList<Staff> staffSortedList = new SortedList<>(staffFilteredList);
+    private static final Logger log = LoggerFactory.getLogger(StafflistPresenter.class);
 
     @FXML
     TextField txtFilter;
@@ -70,7 +73,7 @@ public class StafflistPresenter implements Initializable {
     public void staffClicked() {
         Staff selectedItem = tblStaff.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            System.out.println("Staff clicked: " + tblStaff.getSelectionModel().getSelectedItem());
+            log.info("Staff clicked: " + tblStaff.getSelectionModel().getSelectedItem());
 
         }
         viewModel.setSelectedStaff(selectedItem);

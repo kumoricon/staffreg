@@ -1,20 +1,31 @@
 package org.kumoricon.staff.client.stafflistscreen.checkindetails;
 
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import org.kumoricon.staff.client.ViewModel;
+import org.kumoricon.staff.client.WorkingDirectoryHelper;
 import org.kumoricon.staff.client.model.Staff;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
 public class CheckinDetailsPresenter implements Initializable {
     private Staff staff;
+    private static final Logger log = LoggerFactory.getLogger(CheckinDetailsPresenter.class);
 
     @FXML
     ImageView imgWebcam, imgPicture1, imgPicture2, imgSignature;
@@ -27,27 +38,45 @@ public class CheckinDetailsPresenter implements Initializable {
     @Inject
     CheckinService stafflistService;
 
+    @Inject
+    WebcamService webcamService;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         staff = viewModel.getSelectedStaff();
-
         setViewState();
+        imgWebcam.imageProperty().bind(webcamService.getImageProperty());
     }
 
+    private void setImageState() {
+        if (staff.isPicture1Saved()) {
+            Image image = loadImageFrom(WorkingDirectoryHelper.WORK_QUEUE + staff.getFilename() + "-1.jpg");
+            if (image == null) {
+                image = new Image("/images/picture1saved.png");
+            }
+            imgPicture1.setImage(image);
+
+        } else {
+            imgPicture1.setImage(new Image("/images/picture1example.png"));
+        }
+
+        if (staff.isPicture2Saved()) {
+            Image image = loadImageFrom(WorkingDirectoryHelper.WORK_QUEUE + staff.getFilename() + "-2.jpg");
+            if (image == null) {
+                image = new Image("/images/picture2saved.png");
+            }
+            imgPicture2.setImage(image);
+        } else {
+            imgPicture2.setImage(new Image("/images/picture2example.png"));
+        }
+
+    }
+
+
     private void setViewState() {
+        setImageState();
+
         try {
-            if (staff.isPicture1Saved()) {
-                imgPicture1.setImage(new Image("/picture1saved.png"));
-            } else {
-                imgPicture1.setImage(new Image("/picture1example.png"));
-            }
-
-            if (staff.isPicture2Saved()) {
-                imgPicture2.setImage(new Image("/picture2saved.png"));
-            } else {
-                imgPicture2.setImage(new Image("/picture2example.png"));
-            }
-
             if (staff.isPicture1Saved() && staff.isPicture2Saved() && staff.isSignatureSaved()) {
                 btnCheckIn.setDisable(false);
             } else {
@@ -65,42 +94,78 @@ public class CheckinDetailsPresenter implements Initializable {
                 btnReprint.setDisable(true);
             }
         } catch (Exception ex) {
-            System.out.println(ex);
+            log.error("Error setting view state:", ex);
         }
 
     }
 
 
+    private WritableImage loadImageFrom(String filename) {
+        if (filename != null) {
+            try {
+                File inputFile = new File(filename);
+                BufferedImage img = ImageIO.read(inputFile);
+                return SwingFXUtils.toFXImage(img, null);
+            } catch (IOException e) {
+                log.warn("Could not load image " + filename);
+            }
+        }
+        return null;
+    }
+    private boolean captureImageTo(String filename) {
+        BufferedImage image = webcamService.getImage();
+        File outputFile = new File(WorkingDirectoryHelper.WORK_QUEUE + filename);
+        try {
+            log.info("Writing file to " + outputFile.getAbsolutePath());
+            ImageIO.write(image, "jpg", outputFile);
+            return true;
+        } catch (IOException ex) {
+            log.error("Error writing file " + outputFile.getAbsolutePath(), ex);
+        }
+        return false;
+
+    }
+
     public void picture1Clicked() {
-        System.out.println("Saving picture 1");
-        staff.setPicture1Saved(true);
+        log.info("Saving picture 1");
+        String filename = staff.getFilename() + "-1.jpg";
+        boolean saved = captureImageTo(filename);
+        if (saved) {
+            imgPicture1.setImage(loadImageFrom(filename));
+            staff.setPicture1Saved(true);
+        }
         setViewState();
     }
 
     public void picture2Clicked() {
-        System.out.println("Saving picture 2");
-        staff.setPicture2Saved(true);
+        log.info("Saving picture 2");
+        String filename = staff.getFilename() + "-2.jpg";
+        boolean saved = captureImageTo(filename);
+        if (saved) {
+            imgPicture2.setImage(loadImageFrom(filename));
+            staff.setPicture2Saved(true);
+        }
         setViewState();
     }
 
     public void saveSignatureClicked() {
-        System.out.println("Saving signature");
+        log.info("Saving signature");
         staff.setSignatureSaved(true);
         setViewState();
     }
 
     public void clearSignatureClicked() {
-        System.out.println("Clearing signature");
+        log.info("Clearing signature");
     }
 
     public void checkInClicked() {
-        System.out.println("Check in Clicked");
+        log.info("Check in Clicked");
         staff.setCheckedIn(true);
         setViewState();
     }
 
     public void reprintClicked() {
-        System.out.println("Reprint Clicked");
+        log.info("Reprint Clicked");
     }
 
 

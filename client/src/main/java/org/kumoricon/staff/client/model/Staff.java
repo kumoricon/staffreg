@@ -167,4 +167,19 @@ public class Staff {
                 ", uuid=" + uuid +
                 '}';
     }
+
+    /**
+     * Builds an identifier for this record that could be used as part of a filename
+     * (IE, should be safe to use in common filesystems). It should contain only A-Z, a-z, 0-9, underscore, and
+     * dash
+     * @return String
+     */
+    public String getFilename() {
+        String filename = firstName.getValue().toLowerCase().trim() +
+                " " +
+                lastName.getValue().toLowerCase().trim() +
+                " " +
+                uuid.toString();
+        return filename.replaceAll("[^A-Za-z0-9 _-]", "").replace(' ', '_');
+    }
 }

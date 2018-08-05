@@ -15,6 +15,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        WorkingDirectoryHelper workingDirectoryHelper = new WorkingDirectoryHelper();
+        workingDirectoryHelper.makeSureDirectoriesExist();
 
         LocalDate date = LocalDate.of(4242, Month.JULY, 21);
         Map<Object, Object> customProperties = new HashMap<>();
