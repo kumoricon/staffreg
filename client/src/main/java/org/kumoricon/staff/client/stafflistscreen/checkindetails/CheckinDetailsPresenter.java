@@ -1,6 +1,5 @@
 package org.kumoricon.staff.client.stafflistscreen.checkindetails;
 
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,11 +40,16 @@ public class CheckinDetailsPresenter implements Initializable {
     @Inject
     WebcamService webcamService;
 
+    @Inject
+    SigpadService sigpadService;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         staff = viewModel.getSelectedStaff();
         setViewState();
         imgWebcam.imageProperty().bind(webcamService.getImageProperty());
+
+        imgSignature.imageProperty().bind(sigpadService.getSigImageProperty());
     }
 
     private void setImageState() {
