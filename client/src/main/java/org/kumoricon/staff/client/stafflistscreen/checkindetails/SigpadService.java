@@ -31,7 +31,7 @@ public class SigpadService {
             protected Void call() {
                 log.info("Initializing signature pad");
                 ClassLoader cl = (com.topaz.sigplus.SigPlus.class).getClassLoader();
-                log.info("Path: " + System.getProperty("java.library.path"));
+                log.info("Sigpad Path: " + System.getProperty("java.library.path"));
                 try {
                     sigPlus = (SigPlus) Beans.instantiate( cl, "com.topaz.sigplus.SigPlus" );
 
@@ -41,7 +41,6 @@ public class SigpadService {
                     sigPlus.setImageXSize(1024);
                     sigPlus.setImageYSize(256);
                     startSignatureStream();   // Just to add an empty box to the UI; should only be collecting the
-                    stopSignatureStream();  // stream when a user has been selected
                 } catch (UnsatisfiedLinkError | NoClassDefFoundError | ClassNotFoundException | IOException ex) {
                     log.error("Error initializing signature pad", ex);
                 }
@@ -103,4 +102,11 @@ public class SigpadService {
         return sigImageProperty;
     }
 
+    public void clearSignature() {
+        sigPlus.clearTablet();
+    }
+
+    public BufferedImage getImage() {
+        return signatureGrabbedImage;
+    }
 }

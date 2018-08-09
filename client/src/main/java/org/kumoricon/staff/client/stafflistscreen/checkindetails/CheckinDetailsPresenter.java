@@ -10,6 +10,7 @@ import javafx.scene.image.WritableImage;
 import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.WorkingDirectoryHelper;
 import org.kumoricon.staff.client.model.Staff;
+import org.kumoricon.staff.client.stafflistscreen.StafflistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ public class CheckinDetailsPresenter implements Initializable {
     ViewModel viewModel;
 
     @Inject
-    CheckinService stafflistService;
+    StafflistService stafflistService;
 
     @Inject
     WebcamService webcamService;
@@ -48,7 +49,6 @@ public class CheckinDetailsPresenter implements Initializable {
         staff = viewModel.getSelectedStaff();
         setViewState();
         imgWebcam.imageProperty().bind(webcamService.getImageProperty());
-
         imgSignature.imageProperty().bind(sigpadService.getSigImageProperty());
     }
 
@@ -78,6 +78,11 @@ public class CheckinDetailsPresenter implements Initializable {
 
 
     private void setViewState() {
+        log.info("Setting view state");
+        if (staff == null) {
+            log.warn("Warning: CheckinDetails trying to set view state for null Staff");
+            return;
+        }
         setImageState();
 
         try {
@@ -99,6 +104,7 @@ public class CheckinDetailsPresenter implements Initializable {
             }
         } catch (Exception ex) {
             log.error("Error setting view state:", ex);
+            throw ex;
         }
 
     }
@@ -155,15 +161,30 @@ public class CheckinDetailsPresenter implements Initializable {
     public void saveSignatureClicked() {
         log.info("Saving signature");
         staff.setSignatureSaved(true);
-        setViewState();
+        String filename = staff.getFilename() + "-3.jpg";
+
+        BufferedImage image = sigpadService.getImage();
+        File outputFile = new File(WorkingDirectoryHelper.WORK_QUEUE + filename);
+
+        try {
+            log.info("Writing file to " + outputFile.getAbsolutePath());
+            ImageIO.write(image, "jpg", outputFile);
+            setViewState();
+        } catch (IOException ex) {
+            log.error("Error writing file " + outputFile.getAbsolutePath(), ex);
+        }
+
     }
 
     public void clearSignatureClicked() {
         log.info("Clearing signature");
+        sigpadService.clearSignature();
     }
 
     public void checkInClicked() {
         log.info("Check in Clicked");
+        // Move pictures to outbound queue
+        // Write checkin json in outbound queue
         staff.setCheckedIn(true);
         setViewState();
     }

@@ -49,6 +49,7 @@ public class StafflistPresenter implements Initializable {
 
         staffSortedList.comparatorProperty().bind(tblStaff.comparatorProperty());
 
+
         staffMasterList.add(new Staff("Some", "Dude","Department of Awesome", "L"));
         staffMasterList.add(new Staff("Other", "Guy", "Department of Things", "M"));
         staffMasterList.add(new Staff("Alice", "Anderson", "Party People", "S"));
