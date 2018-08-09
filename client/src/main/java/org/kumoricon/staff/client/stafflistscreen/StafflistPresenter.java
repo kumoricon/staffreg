@@ -22,9 +22,9 @@ import java.util.ResourceBundle;
 
 
 public class StafflistPresenter implements Initializable {
-    private ObservableList<Staff> staffMasterList = FXCollections.observableArrayList();
-    private FilteredList<Staff> staffFilteredList = new FilteredList<>(staffMasterList, p -> true);
-    private SortedList<Staff> staffSortedList = new SortedList<>(staffFilteredList);
+    private ObservableList<Staff> staffMasterList;
+    private FilteredList<Staff> staffFilteredList;
+    private SortedList<Staff> staffSortedList;
     private static final Logger log = LoggerFactory.getLogger(StafflistPresenter.class);
 
     @FXML
@@ -46,17 +46,14 @@ public class StafflistPresenter implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         viewModel.disableRefreshMenu(false);
         viewModel.disablePreferencesMenu(false);
+        staffMasterList = stafflistService.getStaffObservableList();
+        staffFilteredList  = new FilteredList<>(staffMasterList, p -> true);
+        staffSortedList = new SortedList<>(staffFilteredList);
+
+        tblStaff.setItems(staffSortedList);     // Set items here instead of in FXML becaues some bindings won't work
+                                                // if the list doesn't exist when the view is loaded
 
         staffSortedList.comparatorProperty().bind(tblStaff.comparatorProperty());
-
-
-        staffMasterList.add(new Staff("Some", "Dude","Department of Awesome", "L"));
-        staffMasterList.add(new Staff("Other", "Guy", "Department of Things", "M"));
-        staffMasterList.add(new Staff("Alice", "Anderson", "Party People", "S"));
-
-        for (int i = 1; i <= 5000; i++) {
-            staffMasterList.add(new Staff("Guy"+i, "Congoer", "Registration", "XL"));
-        }
     }
 
     public void filterChanged() {

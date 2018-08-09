@@ -6,18 +6,18 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.kumoricon.staff.client.mainscreen.MainscreenView;
 
+import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
 
 public class App extends Application {
+    @Inject
+    private SettingsService settingsService;
 
     @Override
     public void start(Stage stage) throws Exception {
-        WorkingDirectoryHelper workingDirectoryHelper = new WorkingDirectoryHelper();
-        workingDirectoryHelper.makeSureDirectoriesExist();
-
         LocalDate date = LocalDate.of(4242, Month.JULY, 21);
         Map<Object, Object> customProperties = new HashMap<>();
         customProperties.put("date", date);

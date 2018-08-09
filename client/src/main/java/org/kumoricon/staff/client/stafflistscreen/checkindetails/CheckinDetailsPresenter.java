@@ -4,9 +4,11 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import org.kumoricon.staff.client.SettingsService;
 import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.WorkingDirectoryHelper;
 import org.kumoricon.staff.client.model.Staff;
@@ -32,21 +34,25 @@ public class CheckinDetailsPresenter implements Initializable {
 
     @FXML
     Button btnPicture1, btnPicture2, btnSignature, btnClearSignature, btnCheckIn, btnReprint;
+
+    @FXML
+    Label lblName, lblLegalName;
     @Inject
     ViewModel viewModel;
 
     @Inject
-    StafflistService stafflistService;
-
-    @Inject
     WebcamService webcamService;
 
+    @Inject
+    SettingsService settings;
     @Inject
     SigpadService sigpadService;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         staff = viewModel.getSelectedStaff();
+        lblName.setText(staff.getName());
+        lblLegalName.setText(staff.getLegalName());
         setViewState();
         imgWebcam.imageProperty().bind(webcamService.getImageProperty());
         imgSignature.imageProperty().bind(sigpadService.getSigImageProperty());
@@ -54,7 +60,7 @@ public class CheckinDetailsPresenter implements Initializable {
 
     private void setImageState() {
         if (staff.isPicture1Saved()) {
-            Image image = loadImageFrom(WorkingDirectoryHelper.WORK_QUEUE + staff.getFilename() + "-1.jpg");
+            Image image = loadImageFrom(settings.getWorkQueue() + staff.getFilename() + "-1.jpg");
             if (image == null) {
                 image = new Image("/images/picture1saved.png");
             }
@@ -65,7 +71,7 @@ public class CheckinDetailsPresenter implements Initializable {
         }
 
         if (staff.isPicture2Saved()) {
-            Image image = loadImageFrom(WorkingDirectoryHelper.WORK_QUEUE + staff.getFilename() + "-2.jpg");
+            Image image = loadImageFrom(settings.getWorkQueue() + staff.getFilename() + "-2.jpg");
             if (image == null) {
                 image = new Image("/images/picture2saved.png");
             }
@@ -124,7 +130,7 @@ public class CheckinDetailsPresenter implements Initializable {
     }
     private boolean captureImageTo(String filename) {
         BufferedImage image = webcamService.getImage();
-        File outputFile = new File(WorkingDirectoryHelper.WORK_QUEUE + filename);
+        File outputFile = new File(settings.getWorkQueue() + filename);
         try {
             log.info("Writing file to " + outputFile.getAbsolutePath());
             ImageIO.write(image, "jpg", outputFile);
@@ -141,7 +147,6 @@ public class CheckinDetailsPresenter implements Initializable {
         String filename = staff.getFilename() + "-1.jpg";
         boolean saved = captureImageTo(filename);
         if (saved) {
-            imgPicture1.setImage(loadImageFrom(filename));
             staff.setPicture1Saved(true);
         }
         setViewState();
@@ -152,7 +157,6 @@ public class CheckinDetailsPresenter implements Initializable {
         String filename = staff.getFilename() + "-2.jpg";
         boolean saved = captureImageTo(filename);
         if (saved) {
-            imgPicture2.setImage(loadImageFrom(filename));
             staff.setPicture2Saved(true);
         }
         setViewState();
@@ -164,7 +168,7 @@ public class CheckinDetailsPresenter implements Initializable {
         String filename = staff.getFilename() + "-3.jpg";
 
         BufferedImage image = sigpadService.getImage();
-        File outputFile = new File(WorkingDirectoryHelper.WORK_QUEUE + filename);
+        File outputFile = new File(settings.getWorkQueue() + filename);
 
         try {
             log.info("Writing file to " + outputFile.getAbsolutePath());

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kumoricon.staff.client.stafflistscreen.checkindetails.CheckinDetailsPresenter">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.181" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kumoricon.staff.client.stafflistscreen.checkindetails.CheckinDetailsPresenter">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="240.0" minWidth="10.0" prefWidth="234.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="239.0" />
@@ -35,6 +35,8 @@
       <ImageView fx:id="imgPicture2" fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <ImageView fx:id="imgSignature" fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
       <Button fx:id="btnClearSignature" mnemonicParsing="false" onAction="#clearSignatureClicked" text="Clear" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+      <Label fx:id="lblName" alignment="TOP_LEFT" focusTraversable="false" text="Name" GridPane.columnIndex="1" GridPane.valignment="TOP" />
+      <Label fx:id="lblLegalName" focusTraversable="false" text="Legal Name" GridPane.columnIndex="1" GridPane.valignment="CENTER" />
    </children>
    <padding>
       <Insets bottom="5.0" right="5.0" top="5.0" />

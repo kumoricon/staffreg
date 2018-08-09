@@ -11,9 +11,11 @@ import java.util.UUID;
 public class Staff {
     private StringProperty firstName = new SimpleStringProperty();
     private StringProperty lastName = new SimpleStringProperty();
+    private StringProperty legalFirstName = new SimpleStringProperty();
+    private StringProperty legalLastName = new SimpleStringProperty();
     private StringProperty shirtSize = new SimpleStringProperty();
     private StringProperty department = new SimpleStringProperty();
-    private UUID uuid;
+    private String uuid;        // IDs may be numbers for now, GUIDs later
     private BooleanProperty checkedIn = new SimpleBooleanProperty();
     private BooleanProperty picture1Saved = new SimpleBooleanProperty();
     private BooleanProperty picture2Saved = new SimpleBooleanProperty();
@@ -21,7 +23,7 @@ public class Staff {
     private Instant checkedInAt;
 
     public Staff(String firstName, String lastName, String department, String shirtSize) {
-        this.uuid = UUID.randomUUID();
+        this.uuid = UUID.randomUUID().toString();
         this.firstName.setValue(firstName);
         this.lastName.setValue(lastName);
         this.department.setValue(department);
@@ -104,11 +106,11 @@ public class Staff {
         this.department.setValue(department);
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(UUID uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
@@ -158,6 +160,33 @@ public class Staff {
         this.checkedInAt = checkedInAt;
     }
 
+    public String getLegalFirstName() {
+        return legalFirstName.get();
+    }
+
+    public StringProperty legalFirstNameProperty() {
+        return legalFirstName;
+    }
+
+    public void setLegalFirstName(String legalFirstName) {
+        this.legalFirstName.set(legalFirstName);
+    }
+
+    public String getLegalLastName() {
+        return legalLastName.get();
+    }
+
+    public StringProperty legalLastNameProperty() {
+        return legalLastName;
+    }
+
+    public void setLegalLastName(String legalLastName) {
+        this.legalLastName.set(legalLastName);
+    }
+
+    public void setCheckedIn(boolean checkedIn) {
+        this.checkedIn.set(checkedIn);
+    }
 
     @Override
     public String toString() {
@@ -181,5 +210,9 @@ public class Staff {
                 " " +
                 uuid.toString();
         return filename.replaceAll("[^A-Za-z0-9 _-]", "").replace(' ', '_');
+    }
+
+    public String getLegalName() {
+        return legalFirstName.getValue() + " " + legalLastName.getValue();
     }
 }
