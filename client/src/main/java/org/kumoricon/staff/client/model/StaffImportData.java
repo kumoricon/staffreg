@@ -2,8 +2,9 @@ package org.kumoricon.staff.client.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StaffImportData {
@@ -94,6 +95,11 @@ public class StaffImportData {
         s.setUuid(id);
         s.setLegalFirstName(nameOnIdFirst);
         s.setLegalLastName(nameOnIdLast);
+        try {
+            s.setBirthDate(LocalDate.parse(birthdate));
+        } catch (DateTimeException ex) {
+            s.setBirthDate(LocalDate.now());
+        }
         return s;
     }
 

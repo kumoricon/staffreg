@@ -22,12 +22,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 
 public class CheckinDetailsPresenter implements Initializable {
     private Staff staff;
     private static final Logger log = LoggerFactory.getLogger(CheckinDetailsPresenter.class);
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/uuuu");
 
     @FXML
     ImageView imgWebcam, imgPicture1, imgPicture2, imgSignature;
@@ -54,6 +56,7 @@ public class CheckinDetailsPresenter implements Initializable {
         if (staff != null) {
             lblName.setText("Name: " + staff.getName() + "\n" +
                     "Legal Name: " + staff.getLegalName() + "\n" +
+                    "Birthdate: " + dateFormatter.format(staff.getBirthDate()) + " (" + staff.getCurrentAge() + ")\n" +
                     "Department: " + staff.getDepartment() + "\n" +
                     "Shirt Size: " + staff.getShirtSize());
             setViewState();

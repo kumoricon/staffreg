@@ -1,11 +1,10 @@
 package org.kumoricon.staff.client.model;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -21,6 +20,7 @@ public class Staff {
     private BooleanProperty picture1Saved = new SimpleBooleanProperty();
     private BooleanProperty picture2Saved = new SimpleBooleanProperty();
     private BooleanProperty signatureSaved = new SimpleBooleanProperty();
+    private ObjectProperty<LocalDate> birthDate = new SimpleObjectProperty<>();
     private Instant checkedInAt;
 
     public Staff(String firstName, String lastName, String department, String shirtSize) {
@@ -33,6 +33,7 @@ public class Staff {
         this.picture1Saved.setValue(false);
         this.picture2Saved.setValue(false);
         this.signatureSaved.setValue(false);
+        this.birthDate.setValue(LocalDate.of(2010, 1, 1));
     }
 
     /**
@@ -202,6 +203,18 @@ public class Staff {
         this.checkedIn.set(checkedIn);
     }
 
+    public LocalDate getBirthDate() {
+        return birthDate.get();
+    }
+
+    public ObjectProperty<LocalDate> birthDateProperty() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate.set(birthDate);
+    }
+
     @Override
     public String toString() {
         return "Staff{" +
@@ -228,5 +241,13 @@ public class Staff {
 
     public String getLegalName() {
         return legalFirstName.getValue() + " " + legalLastName.getValue();
+    }
+
+    public Integer getCurrentAge() {
+        if (birthDate.getValue() != null) {
+            return Period.between(birthDate.getValue(), LocalDate.now()).getYears();
+        } else {
+            return 0;
+        }
     }
 }

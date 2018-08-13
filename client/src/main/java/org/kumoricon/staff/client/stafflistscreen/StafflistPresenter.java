@@ -52,6 +52,13 @@ public class StafflistPresenter implements Initializable {
                                                 // if the list doesn't exist when the view is loaded
 
         staffSortedList.comparatorProperty().bind(tblStaff.comparatorProperty());
+
+        tblStaff.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                staffClicked();
+            }
+        });
+
     }
 
     public void filterChanged() {

@@ -17,6 +17,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class StafflistService {
@@ -39,13 +41,19 @@ public class StafflistService {
             @Override protected Void call() throws Exception {
                 File inputFile = new File(settings.getBasePath() + "staffdata.json");
                 log.info("Loading staff from " + inputFile);
+
+                List<Staff> staffToAdd = new ArrayList<>();
                 try {
                     StaffImportFile myObjects = mapper.readValue(inputFile, StaffImportFile.class);
                     log.info("Found {} staff to import", myObjects.getPersons().size());
                     for (StaffImportData person : myObjects.getPersons()) {
                         Staff s = person.toStaff();
-                        staffObservableList.add(s);
+                        staffToAdd.add(s);
                     }
+                    staffObservableList.addAll(staffToAdd);         // Adding items one at a time to the ObserableList
+                                                                    // would cause duplicates to show up until an item
+                                                                    // was selected. Adding all at once seems to prevent
+                                                                    // this.
                 } catch (IOException ex) {
                     log.warn("Couldn't load data from " + inputFile, ex);
                 } catch (Exception ex) {
