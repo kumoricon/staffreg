@@ -37,9 +37,10 @@ public class SigpadService {
 
                     sigPlus.setTabletModel( "SignatureGemLCD1X5" );
                     sigPlus.setTabletComPort( "HID1" );
+
                     sigPlus.setTabletState(1);
-                    sigPlus.setImageXSize(1024);
-                    sigPlus.setImageYSize(256);
+                    sigPlus.setImageXSize(640);
+                    sigPlus.setImageYSize(128);
                     startSignatureStream();   // Just to add an empty box to the UI; should only be collecting the
                 } catch (UnsatisfiedLinkError | NoClassDefFoundError | ClassNotFoundException | IOException ex) {
                     log.error("Error initializing signature pad", ex);
@@ -47,12 +48,11 @@ public class SigpadService {
 
                 return null;
             }
-
         };
 
         Thread th = new Thread(sigPadIntilizer);
         th.setDaemon(true);
-        th.setUncaughtExceptionHandler((t1, e) -> log.error("Error initializing sigpad", e));
+        th.setUncaughtExceptionHandler((t1, e) -> log.error("Sigpad error:", e));
         th.start();
     }
 

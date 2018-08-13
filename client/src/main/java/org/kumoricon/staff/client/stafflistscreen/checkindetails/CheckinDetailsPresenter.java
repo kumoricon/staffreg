@@ -61,6 +61,8 @@ public class CheckinDetailsPresenter implements Initializable {
                     "Shirt Size: " + staff.getShirtSize());
             setViewState();
             imgWebcam.imageProperty().bind(webcamService.getImageProperty());
+            sigpadService.clearSignature();      // Clear the signature - otherwise changing selected staff could show
+                                                 // someone else's signature
             imgSignature.imageProperty().bind(sigpadService.getSigImageProperty());
         }
     }
