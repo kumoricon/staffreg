@@ -36,7 +36,7 @@ public class CheckinDetailsPresenter implements Initializable {
     Button btnPicture1, btnPicture2, btnSignature, btnClearSignature, btnCheckIn, btnReprint;
 
     @FXML
-    Label lblName, lblLegalName;
+    Label lblName;
     @Inject
     ViewModel viewModel;
 
@@ -51,11 +51,15 @@ public class CheckinDetailsPresenter implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         staff = viewModel.getSelectedStaff();
-        lblName.setText(staff.getName());
-        lblLegalName.setText(staff.getLegalName());
-        setViewState();
-        imgWebcam.imageProperty().bind(webcamService.getImageProperty());
-        imgSignature.imageProperty().bind(sigpadService.getSigImageProperty());
+        if (staff != null) {
+            lblName.setText("Name: " + staff.getName() + "\n" +
+                    "Legal Name: " + staff.getLegalName() + "\n" +
+                    "Department: " + staff.getDepartment() + "\n" +
+                    "Shirt Size: " + staff.getShirtSize());
+            setViewState();
+            imgWebcam.imageProperty().bind(webcamService.getImageProperty());
+            imgSignature.imageProperty().bind(sigpadService.getSigImageProperty());
+        }
     }
 
     private void setImageState() {

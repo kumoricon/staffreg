@@ -35,8 +35,7 @@
       <ImageView fx:id="imgPicture2" fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <ImageView fx:id="imgSignature" fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
       <Button fx:id="btnClearSignature" mnemonicParsing="false" onAction="#clearSignatureClicked" text="Clear" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-      <Label fx:id="lblName" alignment="TOP_LEFT" focusTraversable="false" text="Name" GridPane.columnIndex="1" GridPane.valignment="TOP" />
-      <Label fx:id="lblLegalName" focusTraversable="false" text="Legal Name" GridPane.columnIndex="1" GridPane.valignment="CENTER" />
+      <Label fx:id="lblName" alignment="TOP_LEFT" GridPane.columnIndex="1" GridPane.valignment="TOP" />
    </children>
    <padding>
       <Insets bottom="5.0" right="5.0" top="5.0" />
