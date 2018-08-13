@@ -8,6 +8,7 @@ import javafx.beans.property.StringProperty;
 import java.time.Instant;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class Staff {
     private StringProperty firstName = new SimpleStringProperty();
     private StringProperty lastName = new SimpleStringProperty();
@@ -34,8 +35,21 @@ public class Staff {
         this.signatureSaved.setValue(false);
     }
 
+    /**
+     * Returns the preferred name of this person. If either the first or last name is empty, will
+     * return just the other name without an extra space.
+     * @return Full name
+     */
     public String getName() {
-        return firstName.getValue() + " " + lastName.getValue();
+        String fName = firstName.getValue().trim();
+        String lName = lastName.getValue().trim();
+        String separator = " ";
+
+        if (fName.isEmpty() || lName.isEmpty()) {
+            separator = "";
+        }
+
+        return fName + separator + lName;
     }
 
     public String getFirstName() {
@@ -208,7 +222,7 @@ public class Staff {
                 " " +
                 lastName.getValue().toLowerCase().trim() +
                 " " +
-                uuid.toString();
+                uuid;
         return filename.replaceAll("[^A-Za-z0-9 _-]", "").replace(' ', '_');
     }
 
