@@ -1,7 +1,5 @@
 package org.kumoricon.staff.client.stafflistscreen;
 
-
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -50,7 +48,7 @@ public class StafflistPresenter implements Initializable {
         staffFilteredList  = new FilteredList<>(staffMasterList, p -> true);
         staffSortedList = new SortedList<>(staffFilteredList);
 
-        tblStaff.setItems(staffSortedList);     // Set items here instead of in FXML becaues some bindings won't work
+        tblStaff.setItems(staffSortedList);     // Set items here instead of in FXML because some bindings won't work
                                                 // if the list doesn't exist when the view is loaded
 
         staffSortedList.comparatorProperty().bind(tblStaff.comparatorProperty());
