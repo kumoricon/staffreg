@@ -9,10 +9,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import org.kumoricon.staff.client.SettingsService;
+import org.kumoricon.staff.client.TransferService;
 import org.kumoricon.staff.client.ViewModel;
-import org.kumoricon.staff.client.WorkingDirectoryHelper;
+import org.kumoricon.staff.client.dto.StaffEvent;
 import org.kumoricon.staff.client.model.Staff;
-import org.kumoricon.staff.client.stafflistscreen.StafflistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
@@ -49,6 +50,12 @@ public class CheckinDetailsPresenter implements Initializable {
     SettingsService settings;
     @Inject
     SigpadService sigpadService;
+
+    @Inject
+    EventFactory eventFactory;
+
+    @Inject
+    TransferService transferService;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -197,8 +204,11 @@ public class CheckinDetailsPresenter implements Initializable {
     public void checkInClicked() {
         log.info("Check in Clicked");
         // Move pictures to outbound queue
-        // Write checkin json in outbound queue
+        // Write CHECK_IN json in outbound queue
+        StaffEvent e = eventFactory.buildCheckInEvent(staff);
+        transferService.queueEventToSend(e);
         staff.setCheckedIn(true);
+        staff.setCheckedInAt(Instant.now());
         setViewState();
     }
 

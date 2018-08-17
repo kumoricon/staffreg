@@ -5,6 +5,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import org.kumoricon.staff.client.HealthService;
+import org.kumoricon.staff.client.TransferService;
 import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.loginscreen.LoginView;
 import org.kumoricon.staff.client.preferencesscreen.PreferencesView;
@@ -28,6 +30,9 @@ public class MainscreenPresenter implements Initializable {
     @Inject
     private ViewModel viewModel;
 
+    @Inject
+    private HealthService healthServiceService;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lblStatus.setText("");
@@ -35,6 +40,8 @@ public class MainscreenPresenter implements Initializable {
 
         menuPreferences.disableProperty().bind(viewModel.preferencesMenuDisabledProperty());
         menuRefresh.disableProperty().bind(viewModel.refreshMenuDisabledProperty());
+
+        lblStatus.textProperty().bind(healthServiceService.statusMessageProperty());
         goToLogin();
 
 
