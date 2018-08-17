@@ -1,15 +1,12 @@
 package org.kumoricon.staff.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
 import org.kumoricon.staff.client.dto.StaffEvent;
-import org.kumoricon.staff.client.stafflistscreen.checkindetails.EventFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,20 +23,15 @@ public class TransferService {
     private static final Logger log = LoggerFactory.getLogger(TransferService.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private StringProperty statusMessage = new SimpleStringProperty("");
-
     @Inject
     private SettingsService settingsService;
 
-
-
     @PostConstruct
     public void init() {
-        ScheduledService<String> svc = new ScheduledService<String>() {
-            protected Task<String> createTask() {
-                return new Task<String>() {
-                    protected String call() {
-                        log.info("Sending files");
+        ScheduledService<Void> svc = new ScheduledService<Void>() {
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    protected Void call() {
                         Path outboundDir = Paths.get(settingsService.getOutboundQueue());
 
                         try (Stream<Path> files = Files.list(outboundDir)) {
@@ -51,65 +43,90 @@ public class TransferService {
                                     log.info("Deleted " + f);
                                 }
                             });
-
                         } catch (IOException ex) {
-
+                            log.error("Error sending files", ex);
                         }
-                        return "Waiting to be sent: " + countFiles(outboundDir);
+                        return null;
                     }
                 };
-            }
-
-            private String countFiles(Path directory) {
-                try (Stream<Path> files = Files.list(directory)) {
-                    long count = files.count();
-                    return Long.toString(count);
-                } catch (IOException ex) {
-                    log.error("Error lising files in " + directory, ex);
-                }
-                return "Error";
             }
         };
         svc.setPeriod(Duration.seconds(15));
         svc.setRestartOnFailure(true);
         svc.setMaximumCumulativePeriod(Duration.minutes(1));
-        svc.setOnSucceeded(e -> statusMessage.setValue(e.getSource().getValue().toString()));
         svc.start();
     }
 
-    public void saveImageToWorkDirectory() {
+    public void moveImagesToOutboundDirectory(String staffFileName) {
+        Task<Void> task = new Task<Void>() {
+            @Override protected Void call() throws Exception {
+                Path[] files = {
+                        Paths.get(settingsService.getWorkQueue() + staffFileName + "-1.jpg"),
+                        Paths.get(settingsService.getWorkQueue() + staffFileName + "-2.jpg"),
+                        Paths.get(settingsService.getWorkQueue() + staffFileName + "-3.jpg")
+                };
 
+                int count = 0;
+                boolean complete = false;
+                while (!complete && count < 5) {
+                    for (Path p : files) {
+                        log.info("Checking " + p);
+                        if (p.toFile().exists()) {
+                            log.info("Moving " + p);
+                            Path outbound = Paths.get(settingsService.getOutboundQueue() + p.getFileName());
+                            try {
+                                Files.move(p, outbound);
+                            } catch (IOException ex) {
+                                Thread.sleep(500);
+                            }
+                        }
+                    }
+                    if (!atLeastOneFileExists(files)) {
+                        complete = true;
+                    }
+                    count++;
+                }
+
+                if (atLeastOneFileExists(files)){
+                    log.error("ERROR: retried moving files from work queue to outbound queue, not all were moved");
+                }
+                return null;
+            }
+        };
+
+        Thread th = new Thread(task);
+        th.setUncaughtExceptionHandler((t, e) -> log.error("moveImagesToOutboundDirectory error", e));
+        th.setDaemon(true);
+        th.start();
     }
 
-    public void moveImagesToOutboundDirectory() {
-
+    private boolean atLeastOneFileExists(Path[] files) {
+        for (Path p : files) {
+            if (p.toFile().exists()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void queueEventToSend(StaffEvent event) {
-        File outputFile = buildFilename(event);
-        try {
-            objectMapper.writeValue(outputFile, event);
-        } catch (IOException ex) {
-            log.error("Error writing file " + outputFile, ex);
-            throw new RuntimeException(ex);
-        }
+        Task<Void> task = new Task<Void>() {
+            @Override protected Void call() throws Exception {
+                File outputFile = buildFilename(event);
+                    objectMapper.writeValue(outputFile, event);
+                return null;
+            }
+        };
+
+        Thread th = new Thread(task);
+        th.setUncaughtExceptionHandler((t, e) -> log.error("queueEventToSend error", e));
+        th.setDaemon(true);
+        th.start();
     }
 
     private File buildFilename(StaffEvent event) {
         File outputFile = new File(settingsService.getOutboundQueue() +
-                System.currentTimeMillis() + "-" + event.getEventType() + ".json");
+                System.currentTimeMillis() + "-" + event.getEventType() + "-" + event.getPersonName() + ".json");
         return outputFile;
-    }
-
-    public String getStatusMessage() {
-        return statusMessage.get();
-    }
-
-    public StringProperty statusMessageProperty() {
-        return statusMessage;
-    }
-
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage.set(statusMessage);
     }
 }

@@ -6,10 +6,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import org.kumoricon.staff.client.HealthService;
-import org.kumoricon.staff.client.TransferService;
 import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.loginscreen.LoginView;
 import org.kumoricon.staff.client.preferencesscreen.PreferencesView;
+import org.kumoricon.staff.client.stafflistscreen.checkindetails.WebcamService;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -32,6 +32,10 @@ public class MainscreenPresenter implements Initializable {
 
     @Inject
     private HealthService healthServiceService;
+
+    @SuppressWarnings("unused")
+    @Inject
+    private WebcamService webcamService;        // Just here to start initializing the webcam as early as possible
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

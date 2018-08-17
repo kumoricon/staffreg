@@ -203,9 +203,8 @@ public class CheckinDetailsPresenter implements Initializable {
 
     public void checkInClicked() {
         log.info("Check in Clicked");
-        // Move pictures to outbound queue
-        // Write CHECK_IN json in outbound queue
         StaffEvent e = eventFactory.buildCheckInEvent(staff);
+        transferService.moveImagesToOutboundDirectory(staff.getFilename());
         transferService.queueEventToSend(e);
         staff.setCheckedIn(true);
         staff.setCheckedInAt(Instant.now());
