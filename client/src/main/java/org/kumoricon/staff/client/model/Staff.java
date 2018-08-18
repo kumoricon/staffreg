@@ -21,18 +21,20 @@ public class Staff {
     private BooleanProperty picture2Saved = new SimpleBooleanProperty();
     private BooleanProperty signatureSaved = new SimpleBooleanProperty();
     private ObjectProperty<LocalDate> birthDate = new SimpleObjectProperty<>();
+    private BooleanProperty badgePrinted = new SimpleBooleanProperty();
     private Instant checkedInAt;
 
     public Staff(String firstName, String lastName, String department, String shirtSize) {
         this.uuid = UUID.randomUUID().toString();
-        this.firstName.setValue(firstName);
-        this.lastName.setValue(lastName);
+        setFirstName(firstName);
+        setLastName(lastName);
         this.department.setValue(department);
         this.shirtSize.setValue(shirtSize);
         this.checkedIn.setValue(false);
         this.picture1Saved.setValue(false);
         this.picture2Saved.setValue(false);
         this.signatureSaved.setValue(false);
+        this.badgePrinted.setValue(false);
         this.birthDate.setValue(LocalDate.of(2010, 1, 1));
     }
 
@@ -44,13 +46,7 @@ public class Staff {
     public String getName() {
         String fName = firstName.getValue().trim();
         String lName = lastName.getValue().trim();
-        String separator = " ";
-
-        if (fName.isEmpty() || lName.isEmpty()) {
-            separator = "";
-        }
-
-        return fName + separator + lName;
+        return combineNames(fName, lName);
     }
 
     public String getFirstName() {
@@ -58,7 +54,7 @@ public class Staff {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName.setValue(firstName);
+        this.firstName.setValue(sanitzieName(firstName));
     }
 
     public StringProperty firstNameProperty() {
@@ -102,7 +98,7 @@ public class Staff {
     }
 
     public void setLastName(String lastName) {
-        this.lastName.setValue(lastName);
+        this.lastName.setValue(sanitzieName(lastName));
     }
 
     public String getShirtSize() {
@@ -184,7 +180,7 @@ public class Staff {
     }
 
     public void setLegalFirstName(String legalFirstName) {
-        this.legalFirstName.set(legalFirstName);
+        this.legalFirstName.set(sanitzieName(legalFirstName));
     }
 
     public String getLegalLastName() {
@@ -196,7 +192,7 @@ public class Staff {
     }
 
     public void setLegalLastName(String legalLastName) {
-        this.legalLastName.set(legalLastName);
+        this.legalLastName.set(sanitzieName(legalLastName));
     }
 
     public void setCheckedIn(boolean checkedIn) {
@@ -213,6 +209,18 @@ public class Staff {
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate.set(birthDate);
+    }
+
+    public boolean isBadgePrinted() {
+        return badgePrinted.get();
+    }
+
+    public BooleanProperty badgePrintedProperty() {
+        return badgePrinted;
+    }
+
+    public void setBadgePrinted(boolean badgePrinted) {
+        this.badgePrinted.set(badgePrinted);
     }
 
     @Override
@@ -240,7 +248,22 @@ public class Staff {
     }
 
     public String getLegalName() {
-        return legalFirstName.getValue() + " " + legalLastName.getValue();
+        return combineNames(legalFirstName.getValue(), legalLastName.getValue());
+    }
+
+    static String combineNames(String first, String last) {
+        String separator = " ";
+
+        if (first.isEmpty() || last.isEmpty()) {
+            separator = "";
+        }
+
+        return first + separator + last;
+    }
+
+    private static String sanitzieName(String name) {
+        if (name == null) return "";
+        return name.trim();
     }
 
     public Integer getCurrentAge() {
