@@ -67,8 +67,8 @@ public class StafflistPresenter implements Initializable {
             // If filter text is empty, display all staff
             if (filterOn.isEmpty()) { return true; }
 
-            return staff.getFirstName().toLowerCase().contains(filterOn) ||
-                    staff.getLastName().toLowerCase().contains(filterOn) ||
+            return staff.getName().toLowerCase().contains(filterOn) ||
+                    staff.getLegalName().toLowerCase().contains(filterOn) ||
                     staff.getDepartment().toLowerCase().contains(filterOn);
         });
     }
