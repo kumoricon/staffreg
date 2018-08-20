@@ -22,6 +22,7 @@ public class Staff {
     private BooleanProperty signatureSaved = new SimpleBooleanProperty();
     private ObjectProperty<LocalDate> birthDate = new SimpleObjectProperty<>();
     private BooleanProperty badgePrinted = new SimpleBooleanProperty();
+    private BooleanProperty deleted = new SimpleBooleanProperty();
     private Instant checkedInAt;
 
     public Staff(String firstName, String lastName, String department, String shirtSize) {
@@ -35,6 +36,7 @@ public class Staff {
         this.picture2Saved.setValue(false);
         this.signatureSaved.setValue(false);
         this.badgePrinted.setValue(false);
+        this.deleted.setValue(false);
         this.birthDate.setValue(LocalDate.of(2010, 1, 1));
     }
 
@@ -221,6 +223,18 @@ public class Staff {
 
     public void setBadgePrinted(boolean badgePrinted) {
         this.badgePrinted.set(badgePrinted);
+    }
+
+    public boolean isDeleted() {
+        return deleted.get();
+    }
+
+    public BooleanProperty deletedProperty() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted.set(deleted);
     }
 
     @Override

@@ -60,6 +60,11 @@ public class CheckinDetailsPresenter implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         staff = viewModel.getSelectedStaff();
+
+        staff.checkedInProperty().addListener((observable, oldValue, newValue) -> {
+            setViewState();
+        });
+
         if (staff != null) {
             lblName.setText("Name: " + staff.getName() + "\n" +
                     "Legal Name: " + staff.getLegalName() + "\n" +
@@ -100,7 +105,6 @@ public class CheckinDetailsPresenter implements Initializable {
 
 
     private void setViewState() {
-        log.info("Setting view state");
         if (staff == null) {
             log.warn("Warning: CheckinDetails trying to set view state for null Staff");
             return;
@@ -109,7 +113,11 @@ public class CheckinDetailsPresenter implements Initializable {
 
         try {
             if (staff.isPicture1Saved() && staff.isPicture2Saved() && staff.isSignatureSaved()) {
-                btnCheckIn.setDisable(false);
+                if (staff.isDeleted()) {
+                    btnCheckIn.setDisable(true);
+                } else {
+                    btnCheckIn.setDisable(false);
+                }
             } else {
                 btnCheckIn.setDisable(true);
             }
