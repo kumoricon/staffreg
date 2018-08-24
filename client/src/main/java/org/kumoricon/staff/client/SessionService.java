@@ -19,6 +19,8 @@ public class SessionService {
     private final SimpleStringProperty username = new SimpleStringProperty();
     private final SimpleStringProperty password = new SimpleStringProperty();
     private final SimpleStringProperty hostname = new SimpleStringProperty();
+    private final SimpleStringProperty serverHostname = new SimpleStringProperty();
+
     private final SimpleBooleanProperty loggedIn = new SimpleBooleanProperty(false);
 
     @PostConstruct
@@ -107,5 +109,17 @@ public class SessionService {
 
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn.set(loggedIn);
+    }
+
+    public String getServerHostname() {
+        return serverHostname.get();
+    }
+
+    public SimpleStringProperty serverHostnameProperty() {
+        return serverHostname;
+    }
+
+    public void setServerHostname(String serverHostname) {
+        this.serverHostname.set(serverHostname);
     }
 }

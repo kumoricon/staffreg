@@ -9,6 +9,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.kumoricon.staff.client.ViewModel;
+import org.kumoricon.staff.client.heartbeat.HeartbeatService;
 import org.kumoricon.staff.client.model.Staff;
 import org.kumoricon.staff.client.stafflistscreen.checkindetails.CheckinDetailsView;
 import org.slf4j.Logger;
@@ -39,6 +40,10 @@ public class StafflistPresenter implements Initializable {
 
     @Inject
     StafflistService stafflistService;
+
+    @SuppressWarnings("unused")
+    @Inject
+    private HeartbeatService heartbeatService;  // Just here to start initializing the heartbeat
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

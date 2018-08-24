@@ -5,7 +5,9 @@ import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
+import javafx.util.Duration;
 import org.kumoricon.staff.client.SettingsService;
 import org.kumoricon.staff.client.model.Staff;
 import org.kumoricon.staff.client.model.StaffImportData;
@@ -20,12 +22,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class StafflistService {
     private final ObservableList<Staff> staffObservableList = FXCollections.observableArrayList();
     private final ObservableMap<UUID, Staff> staffObservableMap = new SimpleMapProperty<>();
     private static final Logger log = LoggerFactory.getLogger(StafflistService.class);
     private final ObjectMapper mapper = new ObjectMapper();
+    private AtomicInteger i = new AtomicInteger(0);
 
     @Inject
     private SettingsService settings;
@@ -34,6 +38,27 @@ public class StafflistService {
     public void init() {
         log.info("Stafflist service initialized");
         loadDataFromFileAsync();
+        startDeleter();
+    }
+
+    public void startDeleter() {
+        ScheduledService<String> svc = new ScheduledService<String>() {
+            protected Task<String> createTask() {
+                return new Task<String>() {
+                    protected String call() {
+                        int x = i.getAndIncrement();
+                        if (x < staffObservableList.size()) {
+                            staffObservableList.get(x).setCheckedIn(true);
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        svc.setPeriod(Duration.millis(500));
+        svc.setRestartOnFailure(true);
+        svc.setMaximumCumulativePeriod(Duration.seconds(10));
+        svc.start();
     }
 
     private void loadDataFromFileAsync() {
@@ -46,9 +71,13 @@ public class StafflistService {
                 try {
                     StaffImportFile myObjects = mapper.readValue(inputFile, StaffImportFile.class);
                     log.info("Found {} staff to import", myObjects.getPersons().size());
+                    int q = 0;
                     for (StaffImportData person : myObjects.getPersons()) {
-                        Staff s = person.toStaff();
-                        staffToAdd.add(s);
+                        if (q < 30) {
+                            Staff s = person.toStaff();
+                            staffToAdd.add(s);
+                        }
+                        q++;
                     }
                     staffObservableList.addAll(staffToAdd);         // Adding items one at a time to the ObserableList
                                                                     // would cause duplicates to show up until an item

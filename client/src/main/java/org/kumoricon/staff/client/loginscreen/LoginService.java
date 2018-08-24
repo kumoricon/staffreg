@@ -24,11 +24,12 @@ public class LoginService {
         log.info(sessionService.getHostname() + " - " + settingsService.getClientId());
     }
 
-    public boolean login(String username, String password, String service) {
+    public boolean login(String username, String password, String serverURL) {
         // If login successful:
         log.info(username + " logged in successfully");
         sessionService.setUsername(username);
         sessionService.setPassword(password);
+        sessionService.setServerHostname(serverURL);
         sessionService.setLoggedIn(true);
         return true;
     }

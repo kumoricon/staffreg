@@ -1,5 +1,7 @@
 package org.kumoricon.staff.client;
 
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.ScheduledService;
@@ -24,29 +26,41 @@ public class HealthService {
 
     private StringProperty statusMessage = new SimpleStringProperty("");
 
+    private LongProperty workQueueCount = new SimpleLongProperty(0);
+    private LongProperty outboundQueueCount = new SimpleLongProperty(0);
+
     @Inject
     private SettingsService settingsService;
 
     @PostConstruct
     public void init() {
+        startFileCounter();
+    }
+
+    private void startFileCounter() {
         ScheduledService<String> svc = new ScheduledService<String>() {
             protected Task<String> createTask() {
                 return new Task<String>() {
                     protected String call() {
                         Path outboundDir = Paths.get(settingsService.getOutboundQueue());
-                        return "Waiting to be sent: " + countFiles(outboundDir);
+                        outboundQueueCount.set(countFiles(outboundDir));
+
+                        Path workDir = Paths.get(settingsService.getWorkQueue());
+                        workQueueCount.set(countFiles(workDir));
+
+                        return "Waiting to be sent: " + outboundQueueCount.get();
                     }
                 };
             }
 
-            private String countFiles(Path directory) {
+            private long countFiles(Path directory) {
                 try (Stream<Path> files = Files.list(directory)) {
                     long count = files.count();
-                    return Long.toString(count);
+                    return count;
                 } catch (IOException ex) {
                     log.error("Error lising files in " + directory, ex);
                 }
-                return "Error";
+                return -1;
             }
         };
         svc.setPeriod(Duration.seconds(1));
@@ -66,5 +80,21 @@ public class HealthService {
 
     public void setStatusMessage(String statusMessage) {
         this.statusMessage.set(statusMessage);
+    }
+
+    public long getWorkQueueCount() {
+        return workQueueCount.get();
+    }
+
+    public LongProperty workQueueCountProperty() {
+        return workQueueCount;
+    }
+
+    public long getOutboundQueueCount() {
+        return outboundQueueCount.get();
+    }
+
+    public LongProperty outboundQueueCountProperty() {
+        return outboundQueueCount;
     }
 }
