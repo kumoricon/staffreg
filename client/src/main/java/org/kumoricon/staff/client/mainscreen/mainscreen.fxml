@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="480" minWidth="640" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kumoricon.staff.client.mainscreen.MainscreenPresenter">
+<VBox minHeight="480" minWidth="640" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kumoricon.staff.client.mainscreen.MainscreenPresenter">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -18,7 +18,7 @@
           <items>
             <MenuItem fx:id="menuRefresh" mnemonicParsing="false" text="Refresh" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="menuPreferences" mnemonicParsing="false" text="Preferences…" onAction="#goToPreferences" />
+            <MenuItem fx:id="menuPreferences" mnemonicParsing="false" onAction="#goToPreferences" text="Preferences…" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#quitClicked" text="Quit" />
           </items>
@@ -44,16 +44,22 @@
         <!--</Menu>-->
       </menus>
     </MenuBar>
-    <BorderPane fx:id="rootPane" VBox.vgrow="ALWAYS" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+    <BorderPane fx:id="rootPane" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0" VBox.vgrow="ALWAYS">
     </BorderPane>
       <BorderPane id="footer" maxHeight="25.0" minHeight="25.0" prefHeight="25.0">
          <left>
-            <Label fx:id="lblStatus" text="Status" BorderPane.alignment="CENTER">
+            <Label fx:id="lblStatus" text="Status" BorderPane.alignment="CENTER_LEFT">
                <BorderPane.margin>
                   <Insets left="10.0" />
                </BorderPane.margin>
             </Label>
          </left>
+         <right>
+            <Label fx:id="lblHeartbeat" text="Heartbeat" BorderPane.alignment="CENTER_RIGHT">
+               <BorderPane.margin>
+                  <Insets right="10.0" />
+               </BorderPane.margin></Label>
+         </right>
       </BorderPane>
   </children>
 </VBox>

@@ -7,6 +7,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import org.kumoricon.staff.client.HealthService;
 import org.kumoricon.staff.client.ViewModel;
+import org.kumoricon.staff.client.heartbeat.HeartbeatMessage;
+import org.kumoricon.staff.client.heartbeat.HeartbeatService;
 import org.kumoricon.staff.client.loginscreen.LoginView;
 import org.kumoricon.staff.client.preferencesscreen.PreferencesView;
 import org.kumoricon.staff.client.stafflistscreen.checkindetails.WebcamService;
@@ -19,7 +21,7 @@ import java.util.ResourceBundle;
 public class MainscreenPresenter implements Initializable {
 
     @FXML
-    Label lblStatus;
+    Label lblStatus, lblHeartbeat;
 
     @FXML
     MenuItem menuRefresh, menuPreferences, menuQuit;
@@ -33,6 +35,9 @@ public class MainscreenPresenter implements Initializable {
     @Inject
     private HealthService healthServiceService;
 
+    @Inject
+    HeartbeatService heartbeatService;
+
     @SuppressWarnings("unused")
     @Inject
     private WebcamService webcamService;        // Just here to start initializing the webcam as early as possible
@@ -40,12 +45,14 @@ public class MainscreenPresenter implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lblStatus.setText("");
+        lblHeartbeat.setText("");
         rootPane.centerProperty().bind(viewModel.mainViewProperty());
 
         menuPreferences.disableProperty().bind(viewModel.preferencesMenuDisabledProperty());
         menuRefresh.disableProperty().bind(viewModel.refreshMenuDisabledProperty());
 
         lblStatus.textProperty().bind(healthServiceService.statusMessageProperty());
+        lblHeartbeat.textProperty().bind(heartbeatService.statusMessageProperty());
         goToLogin();
 
 

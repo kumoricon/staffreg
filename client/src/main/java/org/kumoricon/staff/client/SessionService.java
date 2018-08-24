@@ -3,12 +3,14 @@ package org.kumoricon.staff.client;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -121,5 +123,12 @@ public class SessionService {
 
     public void setServerHostname(String serverHostname) {
         this.serverHostname.set(serverHostname);
+    }
+
+    public String getHttpAuthHeader() {
+        String auth = username.getValue() + ":" + password.getValue();
+        byte[] encodedAuth = Base64.encodeBase64(
+                auth.getBytes(StandardCharsets.ISO_8859_1));
+        return "Basic " + new String(encodedAuth);
     }
 }
