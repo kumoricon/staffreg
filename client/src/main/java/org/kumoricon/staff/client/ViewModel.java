@@ -7,6 +7,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import org.kumoricon.staff.client.model.Staff;
 
+import javax.annotation.PostConstruct;
+
 public class ViewModel {
 
     private final ObjectProperty<Node> mainView = new SimpleObjectProperty(this, "mainView", null);
@@ -50,4 +52,5 @@ public class ViewModel {
     public final void setSelectedStaff(Staff staff) {
         selectedStaff.setValue(staff);
     }
+
 }

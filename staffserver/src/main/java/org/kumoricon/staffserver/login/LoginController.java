@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class LoginController {
@@ -21,9 +20,27 @@ public class LoginController {
         log.info(request.getHeader("Authorization"));
         boolean loginSucceeded = true;
         if (loginSucceeded) {
-            return new LoginResponse(request.getRemoteUser(), true);
+            return new LoginResponse(request.getRemoteUser(), true, true);
         } else {
             throw new ForbiddenException("Access denied");
+        }
+    }
+
+    @RequestMapping(value = "/login/password", method = RequestMethod.POST)
+    public PasswordChangeResponse changePassword(@RequestParam(name = "clientId") String clientId,
+                                                 @RequestParam(name = "newPassword") String newPassword,
+                                                 HttpServletRequest request) {
+        log.info("clientId: {}", clientId);
+        log.info("IP: {}", request.getRemoteAddr());
+        log.info("User: {}", request.getRemoteUser());
+        log.info("New Password: {}", newPassword);
+
+        log.info(request.getHeader("Authorization"));
+        boolean success = true;
+        if (success) {
+            return new PasswordChangeResponse(true, newPassword);
+        } else {
+            return new PasswordChangeResponse(false, "");
         }
     }
 }

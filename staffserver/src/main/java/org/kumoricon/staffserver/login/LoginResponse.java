@@ -5,12 +5,14 @@ public class LoginResponse {
 
     private final String username;
     private final Boolean success;
+    private final Boolean passwordChangeRequired;
     private long timestamp;
 
-    LoginResponse(String username, Boolean success) {
+    LoginResponse(String username, Boolean success, Boolean passwordChangeRequired) {
         this.username = username;
         this.success = success;
         this.timestamp = System.currentTimeMillis();
+        this.passwordChangeRequired = passwordChangeRequired;
     }
 
     public String getUsername() {
@@ -24,4 +26,6 @@ public class LoginResponse {
     public long getTimestamp() {
         return timestamp;
     }
+
+    public Boolean getPasswordChangeRequired() { return passwordChangeRequired; }
 }

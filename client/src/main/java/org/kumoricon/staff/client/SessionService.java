@@ -22,6 +22,7 @@ public class SessionService {
     private final SimpleStringProperty password = new SimpleStringProperty();
     private final SimpleStringProperty hostname = new SimpleStringProperty();
     private final SimpleStringProperty serverHostname = new SimpleStringProperty();
+    private final SimpleBooleanProperty passwordChangeRequired = new SimpleBooleanProperty();
 
     private final SimpleBooleanProperty loggedIn = new SimpleBooleanProperty(false);
 
@@ -130,5 +131,17 @@ public class SessionService {
         byte[] encodedAuth = Base64.encodeBase64(
                 auth.getBytes(StandardCharsets.ISO_8859_1));
         return "Basic " + new String(encodedAuth);
+    }
+
+    public boolean isPasswordChangeRequired() {
+        return passwordChangeRequired.get();
+    }
+
+    public SimpleBooleanProperty passwordChangeRequiredProperty() {
+        return passwordChangeRequired;
+    }
+
+    public void setPasswordChangeRequired(boolean passwordChangeRequired) {
+        this.passwordChangeRequired.set(passwordChangeRequired);
     }
 }
