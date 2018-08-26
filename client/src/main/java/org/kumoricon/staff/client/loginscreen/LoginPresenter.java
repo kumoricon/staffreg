@@ -75,10 +75,10 @@ public class LoginPresenter implements Initializable {
     }
 
     private void showNewPasswordWindow() {
-        TextInputDialog dialog = new TextInputDialog("");
+        PasswordInputDialog dialog = new PasswordInputDialog();
         dialog.setTitle("Change Password");
-        dialog.setHeaderText("");
-        dialog.setContentText("New Password:");
+        dialog.setHeaderText("Password must be 4+ characters");
+        dialog.setContentText("Password:");
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(s -> {
             log.info("New password set");
