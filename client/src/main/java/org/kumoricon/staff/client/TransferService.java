@@ -1,12 +1,10 @@
 package org.kumoricon.staff.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
-import org.kumoricon.staff.client.dto.StaffEvent;
+import org.kumoricon.staff.dto.StaffEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

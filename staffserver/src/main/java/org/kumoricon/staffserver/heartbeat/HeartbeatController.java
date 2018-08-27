@@ -1,5 +1,6 @@
 package org.kumoricon.staffserver.heartbeat;
 
+import org.kumoricon.staff.dto.HeartbeatRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;

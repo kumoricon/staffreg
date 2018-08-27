@@ -11,8 +11,8 @@ import javafx.scene.image.WritableImage;
 import org.kumoricon.staff.client.SettingsService;
 import org.kumoricon.staff.client.TransferService;
 import org.kumoricon.staff.client.ViewModel;
-import org.kumoricon.staff.client.dto.StaffEvent;
 import org.kumoricon.staff.client.model.Staff;
+import org.kumoricon.staff.dto.StaffEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

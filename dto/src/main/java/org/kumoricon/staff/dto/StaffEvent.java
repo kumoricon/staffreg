@@ -1,4 +1,7 @@
-package org.kumoricon.staff.client.dto;
+package org.kumoricon.staff.dto;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents an event, done by a user, on a specific person
@@ -14,73 +17,56 @@ public class StaffEvent {
     private String personName;          // For convenience, use personId for record keeping
     private EVENT_TYPE eventType;
 
-
-    public StaffEvent() {
-        eventCreatedAt = System.currentTimeMillis();
+    @JsonCreator
+    public StaffEvent (
+            @JsonProperty(value = "clientId", required = true) String clientId,
+            @JsonProperty(value = "clientMachineName", required = true) String clientMachineName,
+            @JsonProperty(value = "userId", required = true) String userId,
+            @JsonProperty(value = "username", required = true) String username,
+            @JsonProperty(value = "eventCreatedAt", required = true) Long eventCreatedAt,
+            @JsonProperty(value = "personId", required = true) String personId,
+            @JsonProperty(value = "personName", required = true) String personName,
+            @JsonProperty(value = "eventType", required = true) EVENT_TYPE eventType) {
+        this.clientId = clientId;
+        this.clientMachineName = clientMachineName;
+        this.userId = userId;
+        this.username = username;
+        this.eventCreatedAt = eventCreatedAt;
+        this.personId = personId;
+        this.personName = personName;
+        this.eventType = eventType;
     }
 
     public String getClientId() {
         return clientId;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
     public String getUserId() {
         return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public Long getEventCreatedAt() {
         return eventCreatedAt;
     }
 
-    public void setEventCreatedAt(Long timestamp) {
-        this.eventCreatedAt = timestamp;
-    }
-
     public String getClientMachineName() {
         return clientMachineName;
-    }
-
-    public void setClientMachineName(String clientMachineName) {
-        this.clientMachineName = clientMachineName;
     }
 
     public String getPersonId() {
         return personId;
     }
 
-    public void setPersonId(String personId) {
-        this.personId = personId;
-    }
-
     public String getEventType() {
         return eventType.name();
-    }
-
-    public void setEventType(EVENT_TYPE eventType) {
-        this.eventType = eventType;
     }
 
     public String getPersonName() {
         return personName;
     }
 
-    public void setPersonName(String personName) {
-        this.personName = personName;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     @Override

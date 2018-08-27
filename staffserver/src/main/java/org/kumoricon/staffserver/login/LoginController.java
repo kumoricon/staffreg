@@ -1,5 +1,7 @@
 package org.kumoricon.staffserver.login;
 
+import org.kumoricon.staff.dto.LoginResponse;
+import org.kumoricon.staff.dto.PasswordChangeResponse;
 import org.kumoricon.staffserver.exception.ForbiddenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,5 +1,7 @@
 package org.kumoricon.staffserver.event;
 
+import org.kumoricon.staff.dto.StaffEvent;
+
 import java.time.Instant;
 
 public class StaffEventRecord {

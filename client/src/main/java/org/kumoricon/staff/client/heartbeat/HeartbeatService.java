@@ -10,15 +10,9 @@ import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
+import org.kumoricon.staff.dto.HeartbeatRequest;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.kumoricon.staff.client.HealthService;
 import org.kumoricon.staff.client.SessionService;
@@ -29,8 +23,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -96,14 +88,14 @@ public class HeartbeatService {
         return "";
     }
 
-    private HeartbeatMessage getHeartbeatMessage() {
-        HeartbeatMessage h = new HeartbeatMessage();
-        h.setClientId(settingsService.getClientId());
-        h.setMachineName(sessionService.getHostname());
-        h.setUsername(sessionService.getUsername());
-        h.setOutboundQueueCount(healthService.getOutboundQueueCount());
-        h.setWorkQueueCount(healthService.getWorkQueueCount());
-        return h;
+    private HeartbeatRequest getHeartbeatMessage() {
+        return new HeartbeatRequest(
+                settingsService.getClientId(),
+                sessionService.getUsername(),
+                sessionService.getHostname(),
+                healthService.getWorkQueueCount(),
+                healthService.getOutboundQueueCount()
+        );
     }
 
     public String getStatusMessage() {

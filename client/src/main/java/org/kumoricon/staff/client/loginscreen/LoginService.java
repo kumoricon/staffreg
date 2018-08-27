@@ -3,13 +3,14 @@ package org.kumoricon.staff.client.loginscreen;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 import org.kumoricon.staff.client.SessionService;
 import org.kumoricon.staff.client.SettingsService;
+import org.kumoricon.staff.dto.LoginResponse;
+import org.kumoricon.staff.dto.PasswordChangeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

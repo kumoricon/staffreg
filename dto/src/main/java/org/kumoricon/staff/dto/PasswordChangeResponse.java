@@ -1,4 +1,4 @@
-package org.kumoricon.staff.client.loginscreen;
+package org.kumoricon.staff.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

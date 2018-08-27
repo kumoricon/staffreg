@@ -1,5 +1,7 @@
 package org.kumoricon.staffserver.heartbeat;
 
+import org.kumoricon.staff.dto.HeartbeatRequest;
+
 import java.time.Instant;
 
 public class HeartbeatRecord {

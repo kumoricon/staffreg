@@ -2,8 +2,8 @@ package org.kumoricon.staff.client.stafflistscreen.checkindetails;
 
 import org.kumoricon.staff.client.SessionService;
 import org.kumoricon.staff.client.SettingsService;
-import org.kumoricon.staff.client.dto.StaffEvent;
 import org.kumoricon.staff.client.model.Staff;
+import org.kumoricon.staff.dto.StaffEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,26 +25,23 @@ public class EventFactory {
     }
 
     public StaffEvent buildCheckInEvent(Staff staff) {
-        StaffEvent event = buildEvent(staff);
-        event.setEventType(StaffEvent.EVENT_TYPE.CHECK_IN);
-        return event;
+        return buildEvent(staff, StaffEvent.EVENT_TYPE.CHECK_IN);
     }
 
     public StaffEvent buildReprintEvent(Staff staff) {
-        StaffEvent event = buildEvent(staff);
-        event.setEventType(StaffEvent.EVENT_TYPE.REPRINT_BADGE);
-        return event;
+        return buildEvent(staff, StaffEvent.EVENT_TYPE.REPRINT_BADGE);
     }
 
-    private StaffEvent buildEvent(Staff staff) {
-        StaffEvent staffEvent = new StaffEvent();
-        staffEvent.setClientId(settingsService.getClientId());
-        staffEvent.setUserId(sessionService.getUsername());
-        staffEvent.setUsername(sessionService.getUsername());
-        staffEvent.setPersonId(staff.getUuid());
-        staffEvent.setPersonName(staff.getName());
-        staffEvent.setClientMachineName(sessionService.getHostname());
-        return staffEvent;
+    private StaffEvent buildEvent(Staff staff, StaffEvent.EVENT_TYPE eventType) {
+         return new StaffEvent(
+                    settingsService.getClientId(),
+                    sessionService.getHostname(),
+                    sessionService.getUsername(),
+                    sessionService.getUsername(),
+                    System.currentTimeMillis(),
+                    staff.getUuid(),
+                    staff.getName(),
+                    eventType);
     }
 
 }
