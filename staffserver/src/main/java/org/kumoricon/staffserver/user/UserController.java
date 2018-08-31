@@ -1,5 +1,6 @@
 package org.kumoricon.staffserver.user;
 
+import org.kumoricon.staff.dto.UserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @RestController
+@SuppressWarnings(value = "unused")
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -36,10 +37,6 @@ public class UserController {
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public List<UserResponse> getUsers(HttpServletRequest request) {
         List<User> users = userRepository.findAll();
-        log.info(request.getRemoteUser());
-        log.info(request.getAuthType());
-        log.info("ADMIN: {}", request.isUserInRole("ADMIN"));
-        log.info("TEST: {}", request.isUserInRole("TEST"));
         List<UserResponse> userOutput = new ArrayList<>();
         for (User user : users) {
             List<String> roles = new ArrayList<>();

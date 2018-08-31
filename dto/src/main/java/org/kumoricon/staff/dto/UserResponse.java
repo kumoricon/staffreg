@@ -1,7 +1,10 @@
-package org.kumoricon.staffserver.user;
+package org.kumoricon.staff.dto;
 
 import java.util.List;
 
+/**
+ * Used to output partial user information
+ */
 public class UserResponse {
     private String username;
     private boolean enabled;
