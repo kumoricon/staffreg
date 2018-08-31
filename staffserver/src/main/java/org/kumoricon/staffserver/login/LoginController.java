@@ -3,6 +3,8 @@ package org.kumoricon.staffserver.login;
 import org.kumoricon.staff.dto.LoginResponse;
 import org.kumoricon.staff.dto.PasswordChangeResponse;
 import org.kumoricon.staffserver.exception.ForbiddenException;
+import org.kumoricon.staffserver.user.User;
+import org.kumoricon.staffserver.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,23 +16,22 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController {
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
     @Autowired
-    public LoginController(UserDao userDao) {
-        this.userDao = userDao;
+    public LoginController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public LoginResponse login(@RequestParam(name = "clientId") String clientId, HttpServletRequest request) {
-        log.info("clientId: {}", clientId);
-        log.info("IP: {}", request.getRemoteAddr());
-        log.info("User: {}", request.getRemoteUser());
+        log.info("{} logging in on client {} from {}",
+                request.getRemoteUser(), clientId, request.getRemoteAddr());
 
-        log.info(request.getHeader("Authorization"));
+        User u = userRepository.findByUsername(request.getRemoteUser());
         boolean loginSucceeded = true;
         if (loginSucceeded) {
-            return new LoginResponse(request.getRemoteUser(), true, true);
+            return new LoginResponse(request.getRemoteUser(), true, u.isPasswordResetRequired());
         } else {
             throw new ForbiddenException("Access denied");
         }
@@ -40,12 +41,9 @@ public class LoginController {
     public PasswordChangeResponse changePassword(@RequestParam(name = "clientId") String clientId,
                                                  @RequestParam(name = "newPassword") String newPassword,
                                                  HttpServletRequest request) {
-        log.info("clientId: {}", clientId);
-        log.info("IP: {}", request.getRemoteAddr());
-        log.info("User: {}", request.getRemoteUser());
-        log.info("New Password: {}", newPassword);
+        log.info("{} setting new password on client {} from {}",
+                request.getRemoteUser(), clientId, request.getRemoteAddr());
 
-        log.info(request.getHeader("Authorization"));
         boolean success = true;
         if (success) {
             return new PasswordChangeResponse(true, newPassword);
