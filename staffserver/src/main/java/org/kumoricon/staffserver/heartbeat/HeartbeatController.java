@@ -1,6 +1,8 @@
 package org.kumoricon.staffserver.heartbeat;
 
 import org.kumoricon.staff.dto.HeartbeatRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import java.util.List;
 @SuppressWarnings(value = "unused")
 public class HeartbeatController {
     private HeartbeatDao heartbeatDao;
+    private static final Logger log = LoggerFactory.getLogger(HeartbeatController.class);
 
     @Autowired
     public HeartbeatController(HeartbeatDao heartbeatDao) {
@@ -25,7 +28,6 @@ public class HeartbeatController {
     @RequestMapping(value = "/heartbeat", method = RequestMethod.POST)
     public ResponseEntity heartbeat(@RequestBody HeartbeatRequest body, HttpServletRequest request) {
         HeartbeatRecord record = new HeartbeatRecord(body, request.getRemoteUser(), request.getRemoteAddr(), Instant.now());
-
         heartbeatDao.save(record);
 
         return ResponseEntity.ok("Accepted");

@@ -26,7 +26,8 @@ public class EventController {
 
     @RequestMapping(value = "/event", method = RequestMethod.POST)
     public ResponseEntity event(@RequestBody StaffEvent body, HttpServletRequest request) {
-        StaffEventRecord record = new StaffEventRecord(body, Instant.now(), request.getRemoteAddr());
+        StaffEventRecord record = new StaffEventRecord(body, request.getRemoteUser(), Instant.now(), request.getRemoteAddr());
+        log.info("User: " + request.getRemoteUser());
         log.info("Received {}", record);
         eventDao.save(record);
 

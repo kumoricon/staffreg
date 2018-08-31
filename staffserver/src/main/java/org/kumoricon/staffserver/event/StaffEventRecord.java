@@ -8,9 +8,11 @@ public class StaffEventRecord {
     private StaffEvent event;
     private Instant receivedAt;
     private String clientIpAddress;
+    private String authenticatedUser;
 
-    public StaffEventRecord(StaffEvent event, Instant receivedAt, String clientIpAddress) {
+    public StaffEventRecord(StaffEvent event, String authenticatedUser, Instant receivedAt, String clientIpAddress) {
         this.event = event;
+        this.authenticatedUser = authenticatedUser;
         this.receivedAt = receivedAt;
         this.clientIpAddress = clientIpAddress;
     }
@@ -27,12 +29,17 @@ public class StaffEventRecord {
         return clientIpAddress;
     }
 
+    public String getAuthenticatedUser() {
+        return authenticatedUser;
+    }
+
     @Override
     public String toString() {
         return "StaffEventRecord{" +
                 "event=" + event +
                 ", receivedAt=" + receivedAt +
                 ", clientIpAddress='" + clientIpAddress + '\'' +
+                ", authenticatedUser='" + authenticatedUser + '\'' +
                 '}';
     }
 }
