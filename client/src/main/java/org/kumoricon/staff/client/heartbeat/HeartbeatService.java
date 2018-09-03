@@ -9,6 +9,7 @@ import javafx.beans.property.StringProperty;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.kumoricon.staff.dto.HeartbeatRequest;
@@ -59,6 +60,7 @@ public class HeartbeatService {
                     try {
                         HttpResponse response =
                                 Request.Post(sessionService.getServerHostname() + URI_PATH)
+                                        .addHeader(HttpHeaders.AUTHORIZATION, sessionService.getHttpAuthHeader())
                                         .bodyString(jsonData, ContentType.APPLICATION_JSON)
                                         .execute()
                                         .returnResponse();

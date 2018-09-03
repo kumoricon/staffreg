@@ -7,7 +7,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import org.kumoricon.staff.client.HealthService;
 import org.kumoricon.staff.client.ViewModel;
-import org.kumoricon.staff.client.heartbeat.HeartbeatMessage;
 import org.kumoricon.staff.client.heartbeat.HeartbeatService;
 import org.kumoricon.staff.client.loginscreen.LoginView;
 import org.kumoricon.staff.client.preferencesscreen.PreferencesView;
