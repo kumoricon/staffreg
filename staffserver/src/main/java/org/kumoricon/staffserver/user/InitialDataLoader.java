@@ -56,6 +56,7 @@ public class InitialDataLoader implements
         user.setPassword(passwordEncoder.encode("password"));
         user.setRoles(Collections.singletonList(adminRole));
         user.setEnabled(true);
+        user.setPasswordResetRequired(true);
         userRepository.save(user);
         log.info("Created default user admin / password");
     }
