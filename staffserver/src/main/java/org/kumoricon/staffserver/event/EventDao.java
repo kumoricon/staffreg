@@ -12,7 +12,4 @@ public class EventDao {
         records.add(staffEventRecord);
     }
 
-//    List<StaffEventRecord> getRecords() {
-//        return new Arrays.asList(records.toArray());
-//    }
 }

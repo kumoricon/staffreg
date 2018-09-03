@@ -94,4 +94,16 @@ public class User {
     public void setPasswordResetRequired(boolean passwordResetRequired) {
         this.passwordResetRequired = passwordResetRequired;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", passwordResetRequired=" + passwordResetRequired +
+                ", tokenExpired=" + tokenExpired +
+                '}';
+    }
 }
+
+

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -34,7 +35,6 @@ public class InitialDataLoader implements
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-
         if (userRepository.count() > 0 || privilegeRepository.count() > 0 || roleRepository.count() > 0) {
             log.info("Found data in user/role/privillege tables, skipping setup");
             return;
@@ -48,14 +48,13 @@ public class InitialDataLoader implements
 
         List<Privilege> adminPrivileges = Arrays.asList(
                 readPrivilege, writePrivilege);
-        createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
+        Role adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+        Role userRole = createRoleIfNotFound("ROLE_USER", Collections.singletonList(readPrivilege));
 
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
         User user = new User();
         user.setUsername("admin");
         user.setPassword(passwordEncoder.encode("password"));
-        user.setRoles(Arrays.asList(adminRole));
+        user.setRoles(Collections.singletonList(adminRole));
         user.setEnabled(true);
         userRepository.save(user);
         log.info("Created default user admin / password");

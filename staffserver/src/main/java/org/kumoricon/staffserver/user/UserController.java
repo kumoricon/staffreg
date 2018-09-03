@@ -54,6 +54,11 @@ public class UserController {
             @RequestParam(name = "role") String role,
             HttpServletRequest request) {
 
+        User existing = userRepository.findByUsername(username);
+        if (existing != null) {
+            throw new RuntimeException("Error: " + username + " already exists");
+        }
+
         Role r = roleRepository.findByName(role);
 
         User user = new User();
@@ -64,7 +69,7 @@ public class UserController {
         user.setPasswordResetRequired(true);
 
         userRepository.save(user);
-
+        log.info(passwordEncoder.encode("password"));
         log.info("Creating user {}", user);
         return "Created " + user.getUsername();
     }
