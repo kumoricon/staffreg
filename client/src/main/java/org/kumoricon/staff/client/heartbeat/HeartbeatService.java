@@ -12,12 +12,12 @@ import javafx.util.Duration;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
-import org.kumoricon.staff.dto.HeartbeatRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 import org.kumoricon.staff.client.HealthService;
 import org.kumoricon.staff.client.SessionService;
 import org.kumoricon.staff.client.SettingsService;
+import org.kumoricon.staff.dto.HeartbeatRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class HeartbeatService {
     @Inject
@@ -44,6 +45,7 @@ public class HeartbeatService {
     private static final Logger log = LoggerFactory.getLogger(HeartbeatService.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
+    private LocalDateTime lastSuccessfulHeartbeat;
 
     @PostConstruct
     public void init() {
@@ -66,6 +68,7 @@ public class HeartbeatService {
                                         .returnResponse();
                         log.info("Heartbeat response: {}", response.getStatusLine());
                         EntityUtils.consume(response.getEntity());
+                        lastSuccessfulHeartbeat = LocalDateTime.now();
                         return LocalDateTime.now();
                     } catch (IOException ex) {
                         log.error("Error sending heartbeat", ex);
@@ -85,9 +88,13 @@ public class HeartbeatService {
 
     private String buildStatusMessage(LocalDateTime dateTime) {
         if (dateTime != null) {
-            return FORMATTER.format(dateTime);
+            return "Hearbeat: " + FORMATTER.format(dateTime);
         }
-        return "";
+        if (lastSuccessfulHeartbeat != null) {
+            return "Heartbeat failed for " + lastSuccessfulHeartbeat.until(LocalDateTime.now(), ChronoUnit.SECONDS) + " seconds";
+        } else {
+            return "No successful heartbeat found";
+        }
     }
 
     private HeartbeatRequest getHeartbeatMessage() {
