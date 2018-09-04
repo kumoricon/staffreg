@@ -1,5 +1,7 @@
 package org.kumoricon.staffserver.user;
 
+import org.kumoricon.staffserver.staff.Staff;
+import org.kumoricon.staffserver.staff.StaffRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.*;
 
 @Component
 public class InitialDataLoader implements
@@ -31,6 +32,9 @@ public class InitialDataLoader implements
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private StaffRepository staffRepository;
 
     @Override
     @Transactional
@@ -59,6 +63,18 @@ public class InitialDataLoader implements
         user.setPasswordResetRequired(true);
         userRepository.save(user);
         log.info("Created default user admin / password");
+
+        Staff s = new Staff();
+        s.setFirstName("Some");
+        s.setLastName("Guy");
+        s.setCheckedIn(false);
+        s.setBirthDate(LocalDate.of(1980, 1,1));
+        s.setUuid(UUID.randomUUID().toString());
+        s.setDepartment("Department of Awesome");
+        s.setShirtSize("M");
+        s.setLastModified(Instant.now());
+
+        staffRepository.save(s);
     }
 
     @Transactional
