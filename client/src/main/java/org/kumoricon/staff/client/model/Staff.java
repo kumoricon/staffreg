@@ -1,6 +1,7 @@
 package org.kumoricon.staff.client.model;
 
 import javafx.beans.property.*;
+import org.kumoricon.staff.dto.StaffResponse;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -25,6 +26,8 @@ public class Staff {
     private BooleanProperty deleted = new SimpleBooleanProperty();
     private Instant checkedInAt;
 
+    private Staff() {}
+
     public Staff(String firstName, String lastName, String department, String shirtSize) {
         this.uuid = UUID.randomUUID().toString();
         setFirstName(firstName);
@@ -38,6 +41,22 @@ public class Staff {
         this.badgePrinted.setValue(false);
         this.deleted.setValue(false);
         this.birthDate.setValue(LocalDate.of(2010, 1, 1));
+    }
+
+    public static Staff fromStaffResponse(StaffResponse person) {
+        Staff s = new Staff();
+        s.setUuid(person.getId());
+        s.setFirstName(person.getFirstName());
+        s.setLastName(person.getLastName());
+        s.setLegalFirstName(person.getLegalFirstName());
+        s.setLegalLastName(person.getLegalLastName());
+        s.setBirthDate(person.getBirthDate());
+        s.setCheckedIn(person.getCheckedIn());
+        s.setCheckedInAt(person.getCheckedInAt());
+        s.setDeleted(person.getDeleted());
+        s.setShirtSize(person.getShirtSize());
+        s.setDepartment(person.getDepartment());
+        return s;
     }
 
     /**

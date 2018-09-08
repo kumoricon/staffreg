@@ -1,6 +1,8 @@
 package org.kumoricon.staff.client.stafflistscreen;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,17 +10,19 @@ import javafx.collections.ObservableMap;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.util.EntityUtils;
+import org.kumoricon.staff.client.SessionService;
 import org.kumoricon.staff.client.SettingsService;
 import org.kumoricon.staff.client.model.Staff;
-import org.kumoricon.staff.client.model.StaffImportData;
-import org.kumoricon.staff.client.model.StaffImportFile;
+import org.kumoricon.staff.dto.StaffResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,15 +34,19 @@ public class StafflistService {
     private static final Logger log = LoggerFactory.getLogger(StafflistService.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private AtomicInteger i = new AtomicInteger(0);
+    private static final String STAFF_URI_PATH = "/staff";
 
     @Inject
     private SettingsService settings;
+
+    @Inject
+    private SessionService sessionService;
 
     @PostConstruct
     public void init() {
         log.info("Stafflist service initialized");
         loadDataFromFileAsync();
-        startDeleter();
+        mapper.registerModule(new JavaTimeModule());
     }
 
     public void startDeleter() {
@@ -64,37 +72,35 @@ public class StafflistService {
     private void loadDataFromFileAsync() {
         Task<Void> task = new Task<Void>() {
             @Override protected Void call() throws Exception {
-                File inputFile = new File(settings.getBasePath() + "staffdata.json");
-                log.info("Loading staff from " + inputFile);
+                HttpResponse response =
+                        Request.Get(sessionService.getServerHostname() + STAFF_URI_PATH)
+                                .addHeader(HttpHeaders.AUTHORIZATION, sessionService.getHttpAuthHeader())
+                                .execute()
+                                .returnResponse();
+                if (response.getStatusLine().getStatusCode() != 200) {
+                    throw new RuntimeException("HTTP status " + response.getStatusLine().getStatusCode());
+                }
+
 
                 List<Staff> staffToAdd = new ArrayList<>();
                 try {
-                    StaffImportFile myObjects = mapper.readValue(inputFile, StaffImportFile.class);
-                    log.info("Found {} staff to import", myObjects.getPersons().size());
+                    List<StaffResponse> staffToImport = mapper.readValue(response.getEntity().getContent(), new TypeReference<List<StaffResponse>>(){});
+
+                    EntityUtils.consume(response.getEntity());
+                    log.info("Found {} staff to import", staffToImport.size());
                     int q = 0;
-                    for (StaffImportData person : myObjects.getPersons()) {
-                        if (q < 30) {
-                            Staff s = person.toStaff();
+                    for (StaffResponse person : staffToImport) {
+                            Staff s = Staff.fromStaffResponse(person);
                             staffToAdd.add(s);
                         }
-                        q++;
-                    }
-                    staffObservableList.addAll(staffToAdd);         // Adding items one at a time to the ObserableList
-                                                                    // would cause duplicates to show up until an item
-                                                                    // was selected. Adding all at once seems to prevent
-                                                                    // this.
-                } catch (IOException ex) {
-                    log.warn("Couldn't load data from " + inputFile, ex);
-                } catch (Exception ex) {
-                    log.error("Error loading data file", ex);
+                    staffObservableList.setAll(staffToAdd);         // Adding items one at a time to the ObserableList
+                    // would cause duplicates to show up until an item
+                    // was selected. Adding all at once seems to prevent
+                    // this.
+                    } catch (Exception ex) {
+                    log.error("Error loading staff", ex);
                 }
 
-                if (staffObservableList.size() == 0) {
-                    log.info("Loading dummy staff instead");
-                    staffObservableList.add(new Staff("Some", "Dude","Department of Awesome", "L"));
-                    staffObservableList.add(new Staff("Other", "Guy", "Department of Things", "M"));
-                    staffObservableList.add(new Staff("Alice", "Anderson", "Party People", "S"));
-                }
                 return null;
             }
         };

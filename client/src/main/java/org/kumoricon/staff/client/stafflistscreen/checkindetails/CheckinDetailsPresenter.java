@@ -196,7 +196,9 @@ public class CheckinDetailsPresenter implements Initializable {
 
         try {
             log.info("Writing file to " + outputFile.getAbsolutePath());
-            ImageIO.write(image, "jpg", outputFile);
+            if (image != null) {
+                ImageIO.write(image, "jpg", outputFile);
+            }
             setViewState();
         } catch (IOException ex) {
             log.error("Error writing file " + outputFile.getAbsolutePath(), ex);
