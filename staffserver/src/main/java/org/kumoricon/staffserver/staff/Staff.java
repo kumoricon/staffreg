@@ -25,6 +25,9 @@ public class Staff {
     private String shirtSize;
     @NotNull
     private String department;
+    @NotNull
+    private String position;
+    private Boolean suppressPrintingDepartment;
     private Boolean checkedIn;
     private LocalDate birthDate;
     private Boolean deleted;
@@ -94,6 +97,22 @@ public class Staff {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public Boolean getSuppressPrintingDepartment() {
+        return suppressPrintingDepartment;
+    }
+
+    public void setSuppressPrintingDepartment(Boolean suppressPrintingDepartment) {
+        this.suppressPrintingDepartment = suppressPrintingDepartment;
     }
 
     public Boolean getCheckedIn() {
