@@ -4,6 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 import org.kumoricon.staff.dto.StaffEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +27,11 @@ import java.util.stream.Stream;
 public class TransferService {
     private static final Logger log = LoggerFactory.getLogger(TransferService.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final String IMAGE_UPLOAD_URI_PATH = "/uploadImage";
+    private static final String JSON_UPLOAD_URI_PATH = "/event";
+
+    @Inject
+    private SessionService sessionService;
 
     @Inject
     private SettingsService settingsService;
@@ -33,17 +45,51 @@ public class TransferService {
                         Path outboundDir = Paths.get(settingsService.getOutboundQueue());
 
                         try (Stream<Path> files = Files.list(outboundDir)) {
-                            files.forEach(p -> {
-                                File f = p.toFile();
-                                log.info("Deleting " + f.getAbsolutePath());
-                                boolean result = f.delete();
-                                if (result) {
-                                    log.info("Deleted " + f);
+                            files.forEach(curFilePath -> {
+                                String uploadUrl;
+
+                                if (curFilePath.toString().endsWith(".json")) {
+                                    uploadUrl = sessionService.getServerHostname() + JSON_UPLOAD_URI_PATH;
+                                } else {
+                                    uploadUrl = sessionService.getServerHostname() + IMAGE_UPLOAD_URI_PATH;
                                 }
+                                FileBody bin = new FileBody(curFilePath.toFile());
+                                HttpEntity reqEntity = MultipartEntityBuilder.create()
+                                        .addPart("file", bin)
+                                        .build();
+
+                                HttpResponse response = null;
+                                try {
+                                    response = Request.Post(uploadUrl)
+                                            .addHeader(HttpHeaders.AUTHORIZATION, sessionService.getHttpAuthHeader())
+                                            .body(reqEntity)
+                                            .execute()
+                                            .returnResponse();
+                                } catch (IOException ex) {
+                                    log.error("Error uploading file", ex);
+                                }
+
+                                if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED) {
+                                    try {
+                                        Files.delete(curFilePath);
+                                    } catch (IOException e) {
+                                        log.error("Error deleting uploaded file {}", curFilePath, e);
+                                    }
+                                } else {
+                                    String responseStatus;
+                                    if (response == null) {
+                                        responseStatus = "no response";
+                                    } else {
+                                        responseStatus = response.getStatusLine().toString();
+                                    }
+                                    log.error("Didn't get 202 response when uploading {} to {}. Got {} instead", curFilePath, uploadUrl, responseStatus);
+                                }
+
                             });
                         } catch (IOException ex) {
                             log.error("Error sending files", ex);
                         }
+
                         return null;
                     }
                 };
