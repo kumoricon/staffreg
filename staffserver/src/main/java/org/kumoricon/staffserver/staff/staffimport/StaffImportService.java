@@ -46,7 +46,7 @@ public class StaffImportService {
 
     @Scheduled(fixedDelay = 10000)
     public void doWork() {
-        log.info("Reading files from " + onlineImportInputPath);
+//        log.info("Reading files from " + onlineImportInputPath);
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(inputPath, "*.{json}")) {
             for (Path entry : stream) {
                 long start = System.currentTimeMillis();
@@ -101,6 +101,7 @@ public class StaffImportService {
     }
 
     private void updateStaffFromPerson(Staff staff, StaffImportFile.Person person) {
+        // TOOD: Corner cases here!
         if (staff.getUuid() == null || !staff.getUuid().equals(person.getId()) ||
                 !staff.getFirstName().equals(person.getNamePreferredFirst()) ||
                 !staff.getLastName().equals(person.getNamePreferredLast()) ||
