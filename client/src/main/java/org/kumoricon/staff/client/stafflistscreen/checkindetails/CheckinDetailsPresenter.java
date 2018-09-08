@@ -80,7 +80,7 @@ public class CheckinDetailsPresenter implements Initializable {
     }
 
     private void setImageState() {
-        if (staff.isPicture1Saved()) {
+        if (staff.isPicture1Saved() || staff.isCheckedIn()) {
             Image image = loadImageFrom(settings.getWorkQueue() + staff.getFilename() + "-1.jpg");
             if (image == null) {
                 image = new Image("/images/picture1saved.png");
@@ -91,7 +91,7 @@ public class CheckinDetailsPresenter implements Initializable {
             imgPicture1.setImage(new Image("/images/picture1example.png"));
         }
 
-        if (staff.isPicture2Saved()) {
+        if (staff.isPicture2Saved() || staff.isCheckedIn()) {
             Image image = loadImageFrom(settings.getWorkQueue() + staff.getFilename() + "-2.jpg");
             if (image == null) {
                 image = new Image("/images/picture2saved.png");
