@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import org.kumoricon.staff.client.BadgeImageDownloadService;
 import org.kumoricon.staff.client.HealthService;
 import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.heartbeat.HeartbeatService;
@@ -40,6 +41,10 @@ public class MainscreenPresenter implements Initializable {
     @SuppressWarnings("unused")
     @Inject
     private WebcamService webcamService;        // Just here to start initializing the webcam as early as possible
+
+    @SuppressWarnings(value = "unused")
+    @Inject
+    private BadgeImageDownloadService badgeImageDownloadService; // Here to start background service
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

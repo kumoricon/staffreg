@@ -106,8 +106,10 @@ public class SettingsService {
         return BASE_PATH + "outbound/";
     }
 
+    public String getBadgeImagePath() { return BASE_PATH + "badgeimage/"; }
+
     public String[] getAllPaths() {
-        String[] paths = {BASE_PATH, getWorkQueue(), getOutboundQueue()};
+        String[] paths = {BASE_PATH, getWorkQueue(), getOutboundQueue(), getBadgeImagePath()};
         return paths;
     }
 
