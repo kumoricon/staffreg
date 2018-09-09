@@ -6,16 +6,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import sun.misc.Resource;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class BadgeImageService {
@@ -72,5 +71,8 @@ public class BadgeImageService {
         }
     }
 
-
+    File getFileFor(String fileName) {
+        Path filePath = Paths.get(badgeImagePathString, fileName);
+        return filePath.toFile();
+    }
 }

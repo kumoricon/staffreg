@@ -1,54 +1,48 @@
 package org.kumoricon.staffserver.badgeimage;
 
+import org.kumoricon.staffserver.imageupload.FileStorageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
+@SuppressWarnings(value = "unused")
 @RestController
 public class BadgeImageController {
     private static final Logger log = LoggerFactory.getLogger(BadgeImageController.class);
+    private final BadgeImageService badgeImageService;
 
     @Autowired
-    private BadgeImageService badgeImageService;
+    public BadgeImageController(BadgeImageService badgeImageService) {
+        this.badgeImageService = badgeImageService;
+    }
 
     @GetMapping("/badgeImages")
     public List<String> getAvailableImages(@RequestParam(value = "after", defaultValue = "0") Long after, HttpServletRequest request) {
-
-        return badgeImageService.availableFiles(after);
+        List<String> availableImages = badgeImageService.availableFiles(after);
+//        log.info("{} getting badge images changed after {}, found {}", request.getRemoteUser(), after, availableImages.size());
+        return availableImages;
     }
 
-
-//    @GetMapping("/downloadFile/{fileName:.+}")
-//    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-//        // Load file as Resource
-//        Resource resource = fileStorageService.loadFileAsResource(fileName);
-//
-//        // Try to determine file's content type
-//        String contentType = null;
-//        try {
-//            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-//        } catch (IOException ex) {
-//            logger.info("Could not determine file type.");
-//        }
-//
-//        // Fallback to the default content type if type could not be determined
-//        if(contentType == null) {
-//            contentType = "application/octet-stream";
-//        }
-//
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.parseMediaType(contentType))
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-//                .body(resource);
-//    }
+    @RequestMapping(value = "/badgeImages/{fileName}", method = RequestMethod.GET, produces = "application/octet-stream")
+    @ResponseBody
+    public FileSystemResource getFile(@PathVariable("fileName") String fileName, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+//        log.info("{} getting image {}", request.getRemoteUser(), fileName);
+        if (fileName.contains("..") || fileName.contains("\\") || fileName.contains("/")) {
+            response.setStatus(400);
+        }
+        File image = badgeImageService.getFileFor(URLDecoder.decode(fileName, "UTF8"));
+        if (image == null || !image.exists()) {
+            response.setStatus(404);
+        }
+        return new FileSystemResource(image);
+    }
 }
