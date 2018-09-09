@@ -1,5 +1,6 @@
 package org.kumoricon.staffserver.staff;
 
+
 import org.kumoricon.staff.dto.StaffResponse;
 
 import javax.persistence.*;
