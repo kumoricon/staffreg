@@ -63,18 +63,6 @@ public class InitialDataLoader implements
         user.setPasswordResetRequired(true);
         userRepository.save(user);
         log.info("Created default user admin / password");
-
-        Staff s = new Staff();
-        s.setFirstName("Some");
-        s.setLastName("Guy");
-        s.setCheckedIn(false);
-        s.setBirthDate(LocalDate.of(1980, 1,1));
-        s.setUuid(UUID.randomUUID().toString());
-        s.setDepartment("Department of Awesome");
-        s.setShirtSize("M");
-        s.setLastModified(Instant.now());
-
-        staffRepository.save(s);
     }
 
     @Transactional
