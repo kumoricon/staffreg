@@ -28,6 +28,7 @@ public class Staff {
     private String department;
     @NotNull
     private String position;
+    @NotNull
     private Boolean suppressPrintingDepartment;
     private Boolean checkedIn;
     private LocalDate birthDate;
