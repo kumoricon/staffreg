@@ -38,8 +38,8 @@ public class StaffResponse {
             @JsonProperty(value="deleted", defaultValue = "false") Boolean deleted,
             @JsonProperty(value="checkedInAt") Instant checkedInAt,
             @JsonProperty(value="lastModifiedAt") Instant lastModifiedAt,
-            @JsonProperty(value="badgePrinted") Boolean badgePrinted,
-            @JsonProperty(value="suppressPrintingDepartment") Boolean suppressPrintingDepartment
+            @JsonProperty(value="badgePrinted", defaultValue = "false") Boolean badgePrinted,
+            @JsonProperty(value="suppressPrintingDepartment", defaultValue = "false") Boolean suppressPrintingDepartment
             ) {
         this.firstName = firstName;
         this.lastName = lastName;
