@@ -25,14 +25,11 @@
       <ImageView fx:id="imgWebcam" fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
       <Label text="Picture 1" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP" />
       <Button fx:id="btnPicture1" mnemonicParsing="false" onAction="#picture1Clicked" text="Take Picture" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Label alignment="CENTER" text="Picture 2 (With Name)" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
       <Label alignment="CENTER" text="Signature" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-      <Button fx:id="btnPicture2" mnemonicParsing="false" onAction="#picture2Clicked" text="Take Picture" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Button fx:id="btnSignature" mnemonicParsing="false" onAction="#saveSignatureClicked" text="Save Signature" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <Button fx:id="btnCheckIn" mnemonicParsing="false" onAction="#checkInClicked" text="Check In" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <Button fx:id="btnReprint" mnemonicParsing="false" onAction="#reprintClicked" text="Reprint" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
       <ImageView fx:id="imgPicture1" fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-      <ImageView fx:id="imgPicture2" fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <ImageView fx:id="imgSignature" fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
       <Button fx:id="btnClearSignature" mnemonicParsing="false" onAction="#clearSignatureClicked" text="Clear" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
       <Label fx:id="lblName" alignment="TOP_LEFT" GridPane.columnIndex="1" GridPane.valignment="TOP" />

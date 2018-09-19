@@ -88,11 +88,12 @@ public class StafflistService {
 
                     EntityUtils.consume(response.getEntity());
                     log.info("Found {} staff to import", staffToImport.size());
-                    int q = 0;
                     for (StaffResponse person : staffToImport) {
+                        if (person != null) {
                             Staff s = Staff.fromStaffResponse(person);
                             staffToAdd.add(s);
                         }
+                    }
                     staffObservableList.setAll(staffToAdd);         // Adding items one at a time to the ObserableList
                     // would cause duplicates to show up until an item
                     // was selected. Adding all at once seems to prevent

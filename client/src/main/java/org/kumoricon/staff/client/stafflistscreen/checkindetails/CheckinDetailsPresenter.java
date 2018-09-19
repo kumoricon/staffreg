@@ -33,10 +33,10 @@ public class CheckinDetailsPresenter implements Initializable {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/uuuu");
 
     @FXML
-    ImageView imgWebcam, imgPicture1, imgPicture2, imgSignature;
+    ImageView imgWebcam, imgPicture1, imgSignature;
 
     @FXML
-    Button btnPicture1, btnPicture2, btnSignature, btnClearSignature, btnCheckIn, btnReprint;
+    Button btnPicture1, btnSignature, btnClearSignature, btnCheckIn, btnReprint;
 
     @FXML
     Label lblName;
@@ -91,17 +91,6 @@ public class CheckinDetailsPresenter implements Initializable {
         } else {
             imgPicture1.setImage(new Image("/images/picture1example.png"));
         }
-
-        if (staff.isPicture2Saved() || staff.isCheckedIn()) {
-            Image image = loadImageFrom(settings.getWorkQueue() + staff.getFilename() + "-2.jpg");
-            if (image == null) {
-                image = new Image("/images/picture2saved.png");
-            }
-            imgPicture2.setImage(image);
-        } else {
-            imgPicture2.setImage(new Image("/images/picture2example.png"));
-        }
-
     }
 
 
@@ -113,7 +102,7 @@ public class CheckinDetailsPresenter implements Initializable {
         setImageState();
 
         try {
-            if (staff.isPicture1Saved() && staff.isPicture2Saved() && staff.isSignatureSaved()) {
+            if (staff.isPicture1Saved() && staff.isSignatureSaved()) {
                 if (staff.isDeleted()) {
                     btnCheckIn.setDisable(true);
                 } else {
@@ -126,7 +115,6 @@ public class CheckinDetailsPresenter implements Initializable {
             if (staff.getCheckedIn()) {
                 btnReprint.setDisable(false);
                 btnPicture1.setDisable(true);
-                btnPicture2.setDisable(true);
                 btnSignature.setDisable(true);
                 btnClearSignature.setDisable(true);
                 btnCheckIn.setDisable(true);
@@ -173,16 +161,6 @@ public class CheckinDetailsPresenter implements Initializable {
         boolean saved = captureImageTo(filename);
         if (saved) {
             staff.setPicture1Saved(true);
-        }
-        setViewState();
-    }
-
-    public void picture2Clicked() {
-        log.info("Saving picture 2");
-        String filename = staff.getFilename() + "-2.jpg";
-        boolean saved = captureImageTo(filename);
-        if (saved) {
-            staff.setPicture2Saved(true);
         }
         setViewState();
     }

@@ -19,7 +19,6 @@ public class Staff {
     private String uuid;        // IDs may be numbers for now, GUIDs later
     private BooleanProperty checkedIn = new SimpleBooleanProperty();
     private BooleanProperty picture1Saved = new SimpleBooleanProperty();
-    private BooleanProperty picture2Saved = new SimpleBooleanProperty();
     private BooleanProperty signatureSaved = new SimpleBooleanProperty();
     private ObjectProperty<LocalDate> birthDate = new SimpleObjectProperty<>();
     private BooleanProperty badgePrinted = new SimpleBooleanProperty();
@@ -37,7 +36,6 @@ public class Staff {
         this.shirtSize.setValue(shirtSize);
         this.checkedIn.setValue(false);
         this.picture1Saved.setValue(false);
-        this.picture2Saved.setValue(false);
         this.signatureSaved.setValue(false);
         this.badgePrinted.setValue(false);
         this.deleted.setValue(false);
@@ -47,6 +45,7 @@ public class Staff {
     }
 
     public static Staff fromStaffResponse(StaffResponse person) {
+        if (person == null) { return null; }
         Staff s = new Staff();
         s.setUuid(person.getId());
         s.setFirstName(person.getFirstName());
@@ -111,10 +110,6 @@ public class Staff {
         return picture1Saved;
     }
 
-    public BooleanProperty picture2SavedProperty() {
-        return picture2Saved;
-    }
-
     public BooleanProperty signatureSavedProperty() {
         return signatureSaved;
     }
@@ -171,14 +166,6 @@ public class Staff {
 
     public void setPicture1Saved(boolean picture1Saved) {
         this.picture1Saved.setValue(picture1Saved);
-    }
-
-    public boolean isPicture2Saved() {
-        return picture2Saved.getValue();
-    }
-
-    public void setPicture2Saved(boolean picture2Saved) {
-        this.picture2Saved.setValue(picture2Saved);
     }
 
     public boolean isSignatureSaved() {
