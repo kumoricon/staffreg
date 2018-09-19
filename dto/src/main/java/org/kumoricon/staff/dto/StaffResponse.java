@@ -2,6 +2,7 @@ package org.kumoricon.staff.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javafx.beans.property.BooleanProperty;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -20,6 +21,8 @@ public class StaffResponse {
     private Boolean deleted;
     private Instant checkedInAt;
     private Instant lastModifiedAt;
+    private Boolean badgePrinted;
+    private Boolean suppressPrintingDepartment;
 
     @JsonCreator
     public StaffResponse(
@@ -34,7 +37,10 @@ public class StaffResponse {
             @JsonProperty(value="birthDate", required = true) LocalDate birthDate,
             @JsonProperty(value="deleted", defaultValue = "false") Boolean deleted,
             @JsonProperty(value="checkedInAt") Instant checkedInAt,
-            @JsonProperty(value="lastModifiedAt") Instant lastModifiedAt) {
+            @JsonProperty(value="lastModifiedAt") Instant lastModifiedAt,
+            @JsonProperty(value="badgePrinted") Boolean badgePrinted,
+            @JsonProperty(value="suppressPrintingDepartment") Boolean suppressPrintingDepartment
+            ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.legalFirstName = legalFirstName == null ? firstName : legalFirstName;
@@ -47,6 +53,8 @@ public class StaffResponse {
         this.deleted = deleted == null ? false : deleted;
         this.checkedInAt = checkedInAt;
         this.lastModifiedAt = lastModifiedAt;
+        this.badgePrinted = badgePrinted;
+        this.suppressPrintingDepartment = suppressPrintingDepartment;
     }
 
     public String getId() {
@@ -95,5 +103,13 @@ public class StaffResponse {
 
     public Instant getLastModifiedAt() {
         return lastModifiedAt;
+    }
+
+    public Boolean getBadgePrinted() {
+        return badgePrinted;
+    }
+
+    public Boolean getSuppressPrintingDepartment() {
+        return suppressPrintingDepartment;
     }
 }

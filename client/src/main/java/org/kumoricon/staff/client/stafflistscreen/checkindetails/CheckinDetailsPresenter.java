@@ -70,7 +70,8 @@ public class CheckinDetailsPresenter implements Initializable {
                     "Legal Name: " + staff.getLegalName() + "\n" +
                     "Birthdate: " + dateFormatter.format(staff.getBirthDate()) + " (" + staff.getCurrentAge() + ")\n" +
                     "Department: " + staff.getDepartment() + "\n" +
-                    "Shirt Size: " + staff.getShirtSize());
+                    "Shirt Size: " + staff.getShirtSize() + "\n" +
+                    "Badge Printed: " + staff.isBadgePrinted());
             setViewState();
             imgWebcam.imageProperty().bind(webcamService.getImageProperty());
             sigpadService.clearSignature();      // Clear the signature - otherwise changing selected staff could show
@@ -218,6 +219,7 @@ public class CheckinDetailsPresenter implements Initializable {
         transferService.queueEventToSend(e);
         staff.setCheckedIn(true);
         staff.setCheckedInAt(Instant.now());
+        staff.setBadgePrinted(true);
         setViewState();
     }
 

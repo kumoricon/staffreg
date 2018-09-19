@@ -66,6 +66,7 @@ public class EventController {
                 staff.setLastModified(Instant.now());
                 staff.setCheckedIn(true);
                 staff.setCheckedInAt(Instant.ofEpochMilli(event.getEvent().getEventCreatedAt()));
+                staff.setBadgePrinted(true);
                 staffRepository.save(staff);
             }
         } else {

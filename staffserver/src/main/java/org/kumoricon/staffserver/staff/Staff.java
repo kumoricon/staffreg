@@ -35,6 +35,8 @@ public class Staff {
     private Instant checkedInAt;
     @NotNull
     private Long lastModifiedMS;
+    @NotNull
+    private Boolean badgePrinted;
 
     public Long getId() {
         return id;
@@ -160,6 +162,14 @@ public class Staff {
         this.lastModifiedMS = lastModified.toEpochMilli();
     }
 
+    public Boolean getBadgePrinted() {
+        return badgePrinted;
+    }
+
+    public void setBadgePrinted(Boolean badgePrinted) {
+        this.badgePrinted = badgePrinted;
+    }
+
     public StaffResponse toStaffResponse() {
         return new StaffResponse(uuid,
                 firstName,
@@ -172,6 +182,8 @@ public class Staff {
                 birthDate,
                 deleted,
                 checkedInAt,
-                Instant.ofEpochMilli(lastModifiedMS));
+                Instant.ofEpochMilli(lastModifiedMS),
+                badgePrinted,
+                suppressPrintingDepartment);
     }
 }

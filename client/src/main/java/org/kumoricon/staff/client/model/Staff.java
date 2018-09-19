@@ -24,6 +24,7 @@ public class Staff {
     private ObjectProperty<LocalDate> birthDate = new SimpleObjectProperty<>();
     private BooleanProperty badgePrinted = new SimpleBooleanProperty();
     private BooleanProperty deleted = new SimpleBooleanProperty();
+    private BooleanProperty suppressPrintingDepartment = new SimpleBooleanProperty();
     private Instant checkedInAt;
 
     private Staff() {}
@@ -41,6 +42,8 @@ public class Staff {
         this.badgePrinted.setValue(false);
         this.deleted.setValue(false);
         this.birthDate.setValue(LocalDate.of(2010, 1, 1));
+        this.suppressPrintingDepartment.setValue(false);
+        this.badgePrinted.setValue(false);
     }
 
     public static Staff fromStaffResponse(StaffResponse person) {
@@ -56,6 +59,8 @@ public class Staff {
         s.setDeleted(person.getDeleted());
         s.setShirtSize(person.getShirtSize());
         s.setDepartment(person.getDepartment());
+        s.setBadgePrinted(person.getBadgePrinted());
+        s.setSuppressPrintingDepartment(person.getSuppressPrintingDepartment());
         return s;
     }
 
@@ -254,6 +259,18 @@ public class Staff {
 
     public void setDeleted(boolean deleted) {
         this.deleted.set(deleted);
+    }
+
+    public boolean getSuppressPrintingDepartment() {
+        return suppressPrintingDepartment.get();
+    }
+
+    public BooleanProperty suppressPrintingDepartmentProperty() {
+        return suppressPrintingDepartment;
+    }
+
+    public void setSuppressPrintingDepartment(boolean suppressPrintingDepartment) {
+        this.suppressPrintingDepartment.set(suppressPrintingDepartment);
     }
 
     @Override
