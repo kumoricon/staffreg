@@ -80,7 +80,8 @@ public class StaffImportService {
         } catch (IOException ex) {
             log.error("Error loading {}", filepath.toString(), ex);
             try {
-                Files.move(filepath, dlqPath);
+                Path dest = Paths.get(dlqPath.toString(), filepath.getFileName().toString());
+                Files.move(filepath, dest);
             } catch (IOException e) {
                 log.error("Error moving {} to DLQ {}", filepath, dlqPath, e);
             }
