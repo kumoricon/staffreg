@@ -3,11 +3,14 @@ package org.kumoricon.staff.client.stafflistscreen.checkindetails;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import org.kumoricon.staff.client.PrintService;
 import org.kumoricon.staff.client.SettingsService;
 import org.kumoricon.staff.client.TransferService;
 import org.kumoricon.staff.client.ViewModel;
@@ -56,6 +59,9 @@ public class CheckinDetailsPresenter implements Initializable {
 
     @Inject
     TransferService transferService;
+
+    @Inject
+    PrintService printService;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -195,14 +201,39 @@ public class CheckinDetailsPresenter implements Initializable {
         StaffEvent e = eventFactory.buildCheckInEvent(staff);
         transferService.moveImagesToOutboundDirectory(staff.getFilename());
         transferService.queueEventToSend(e);
+
+        if (staff.isBadgePrinted()) {
+            Alert alert = new Alert(Alert.AlertType.NONE, "Badge for " + staff.getName() + " already printed", ButtonType.OK);
+            alert.show();
+        } else {
+            String printerName = printService.printBadge(staff);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    "Printed badge for " + staff.getName() + " on printer " + printerName + ". Did it print successfully?",
+                    ButtonType.YES,
+                    ButtonType.NO);
+            // Note: Buttons will be shown in platform specific order. Eg, on Windows it will be "Yes No"
+            alert.setHeaderText(null);
+            alert.showAndWait();
+
+            while (alert.getResult() == ButtonType.NO) {
+                log.warn("User reported printing failed, retrying");
+                printService.printBadge(staff);
+                alert.showAndWait();
+            }
+        }
+
         staff.setCheckedIn(true);
         staff.setCheckedInAt(Instant.now());
         staff.setBadgePrinted(true);
         setViewState();
     }
 
+
     public void reprintClicked() {
         log.info("Reprint Clicked");
+        StaffEvent e = eventFactory.buildReprintEvent(staff);
+        transferService.queueEventToSend(e);
+        printService.printBadge(staff);
     }
 
 
