@@ -36,7 +36,6 @@ public class EventController {
             try {
                 StaffEvent staffEvent = objectMapper.readValue(file.getInputStream(), StaffEvent.class);
                 StaffEventRecord record = new StaffEventRecord(staffEvent, request.getRemoteUser(), Instant.now(), request.getRemoteAddr());
-                log.info("User: " + request.getRemoteUser());
                 log.info("Received {}", record);
                 eventDao.save(record);
                 processEvent(record);
@@ -56,17 +55,16 @@ public class EventController {
     private void processEvent(StaffEventRecord event) {
         Staff staff = staffRepository.findByUuid(event.getEvent().getPersonId());
         if (staff != null) {
-            log.info("{} checked in {} at {} on {}",
-                    event.getEvent().getUsername(),
-                    event.getEvent().getPersonName(),
-                    event.getEvent().getEventCreatedAt(),
-                    event.getEvent().getClientId());
 
             if (StaffEvent.EVENT_TYPE.CHECK_IN.name().equals(event.getEvent().getEventType())) {
                 staff.setLastModified(Instant.now());
                 staff.setCheckedIn(true);
                 staff.setCheckedInAt(Instant.ofEpochMilli(event.getEvent().getEventCreatedAt()));
                 staff.setBadgePrinted(true);
+                staff.setBadgePrintCount(1);
+                staffRepository.save(staff);
+            } else if (StaffEvent.EVENT_TYPE.REPRINT_BADGE.name().equals(event.getEvent().getEventType())) {
+                staff.setBadgePrintCount(staff.getBadgePrintCount()+1);
                 staffRepository.save(staff);
             }
         } else {

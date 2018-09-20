@@ -1,6 +1,7 @@
 package org.kumoricon.staffserver.staff;
 
 
+import org.hibernate.annotations.ColumnDefault;
 import org.kumoricon.staff.dto.StaffResponse;
 
 import javax.persistence.*;
@@ -38,6 +39,9 @@ public class Staff {
     private Long lastModifiedMS;
     @NotNull
     private Boolean badgePrinted;
+    @NotNull
+    @ColumnDefault("0")
+    private Integer badgePrintCount;
 
     public Long getId() {
         return id;
@@ -169,6 +173,14 @@ public class Staff {
 
     public void setBadgePrinted(Boolean badgePrinted) {
         this.badgePrinted = badgePrinted;
+    }
+
+    public Integer getBadgePrintCount() {
+        return badgePrintCount;
+    }
+
+    public void setBadgePrintCount(Integer badgePrintCount) {
+        this.badgePrintCount = badgePrintCount;
     }
 
     public StaffResponse toStaffResponse() {
