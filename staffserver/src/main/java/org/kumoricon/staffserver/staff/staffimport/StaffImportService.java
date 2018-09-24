@@ -96,6 +96,7 @@ public class StaffImportService {
             existing.setCheckedIn(false);
             existing.setDeleted(false);
             existing.setBadgePrinted(false);
+            existing.setBadgePrintCount(0);
         }
 
         updateStaffFromPerson(existing, person);

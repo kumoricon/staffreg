@@ -31,12 +31,13 @@ public class BadgeImageController {
         return availableImages;
     }
 
-    @RequestMapping(value = "/badgeImages/{fileName}", method = RequestMethod.GET, produces = "application/octet-stream")
+    @RequestMapping(value = "/badgeImages/{fileName:.+}", method = RequestMethod.GET)
     @ResponseBody
     public FileSystemResource getFile(@PathVariable("fileName") String fileName, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 //        log.info("{} getting image {}", request.getRemoteUser(), fileName);
         if (fileName.contains("..") || fileName.contains("\\") || fileName.contains("/")) {
             response.setStatus(400);
+            return null;
         }
         File image = badgeImageService.getFileFor(URLDecoder.decode(fileName, "UTF8"));
         if (image == null || !image.exists()) {

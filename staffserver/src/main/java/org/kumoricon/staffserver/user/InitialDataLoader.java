@@ -61,6 +61,7 @@ public class InitialDataLoader implements
         user.setRoles(Collections.singletonList(adminRole));
         user.setEnabled(true);
         user.setPasswordResetRequired(true);
+        log.info("admin password hashed: " + user.getPassword());
         userRepository.save(user);
         log.info("Created default user admin / password");
     }
