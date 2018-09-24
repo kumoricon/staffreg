@@ -19,13 +19,13 @@ import java.time.Instant;
 @SuppressWarnings(value = "unused")
 public class EventController {
     private static final Logger log = LoggerFactory.getLogger(EventController.class);
-    private EventDao eventDao;
+    private EventStorageService eventStorageService;
     private StaffRepository staffRepository;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
-    public EventController(EventDao eventDao, StaffRepository staffRepository) {
-        this.eventDao = eventDao;
+    public EventController(EventStorageService eventService, StaffRepository staffRepository) {
+        this.eventStorageService = eventService;
         this.staffRepository = staffRepository;
     }
 
@@ -37,7 +37,7 @@ public class EventController {
                 StaffEvent staffEvent = objectMapper.readValue(file.getInputStream(), StaffEvent.class);
                 StaffEventRecord record = new StaffEventRecord(staffEvent, request.getRemoteUser(), Instant.now(), request.getRemoteAddr());
                 log.info("Received {}", record);
-                eventDao.save(record);
+                eventStorageService.storeEvent(record);
                 processEvent(record);
             } catch (IOException ex) {
                 success = false;
