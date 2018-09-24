@@ -51,7 +51,6 @@
         <dependency>
             <groupId>com.topaz.sigplus</groupId>
             <artifactId>sigplus</artifactId>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.bidib.jbidib.org.qbang.rxtx</groupId>
