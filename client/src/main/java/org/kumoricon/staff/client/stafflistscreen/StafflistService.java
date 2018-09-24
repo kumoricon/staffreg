@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,70 +46,57 @@ public class StafflistService {
     @PostConstruct
     public void init() {
         log.info("Stafflist service initialized");
-        loadDataFromFileAsync();
+        startDownloader();
         mapper.registerModule(new JavaTimeModule());
     }
 
-    public void startDeleter() {
-        ScheduledService<String> svc = new ScheduledService<String>() {
-            protected Task<String> createTask() {
-                return new Task<String>() {
-                    protected String call() {
-                        int x = i.getAndIncrement();
-                        if (x < staffObservableList.size()) {
-                            staffObservableList.get(x).setCheckedIn(true);
+    public void startDownloader() {
+        ScheduledService<Void> svc = new ScheduledService<Void>() {
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    protected Void call() throws IOException {
+                        if (!sessionService.isLoggedIn() || sessionService.isPasswordChangeRequired()) { return null; }
+                        HttpResponse response =
+                                Request.Get(sessionService.getServerHostname() + STAFF_URI_PATH)
+                                        .addHeader(HttpHeaders.AUTHORIZATION, sessionService.getHttpAuthHeader())
+                                        .execute()
+                                        .returnResponse();
+                        if (response.getStatusLine().getStatusCode() != 200) {
+                            throw new RuntimeException("HTTP status " + response.getStatusLine().getStatusCode());
                         }
+
+
+                        List<Staff> staffToAdd = new ArrayList<>();
+                        try {
+                            List<StaffResponse> staffToImport = mapper.readValue(response.getEntity().getContent(), new TypeReference<List<StaffResponse>>(){});
+
+                            EntityUtils.consume(response.getEntity());
+                            log.info("Found {} staff to import", staffToImport.size());
+                            for (StaffResponse person : staffToImport) {
+                                if (person != null) {
+                                    Staff s = Staff.fromStaffResponse(person);
+                                    staffToAdd.add(s);
+                                }
+                            }
+                            staffObservableList.setAll(staffToAdd);         // Adding items one at a time to the ObserableList
+                            // would cause duplicates to show up until an item
+                            // was selected. Adding all at once seems to prevent
+                            // this.
+                        } catch (Exception ex) {
+                            log.error("Error loading staff", ex);
+                        }
+
                         return null;
                     }
                 };
             }
         };
-        svc.setPeriod(Duration.millis(500));
+        svc.setPeriod(Duration.seconds(15));
         svc.setRestartOnFailure(true);
         svc.setMaximumCumulativePeriod(Duration.seconds(10));
         svc.start();
     }
 
-    private void loadDataFromFileAsync() {
-        Task<Void> task = new Task<Void>() {
-            @Override protected Void call() throws Exception {
-                HttpResponse response =
-                        Request.Get(sessionService.getServerHostname() + STAFF_URI_PATH)
-                                .addHeader(HttpHeaders.AUTHORIZATION, sessionService.getHttpAuthHeader())
-                                .execute()
-                                .returnResponse();
-                if (response.getStatusLine().getStatusCode() != 200) {
-                    throw new RuntimeException("HTTP status " + response.getStatusLine().getStatusCode());
-                }
-
-
-                List<Staff> staffToAdd = new ArrayList<>();
-                try {
-                    List<StaffResponse> staffToImport = mapper.readValue(response.getEntity().getContent(), new TypeReference<List<StaffResponse>>(){});
-
-                    EntityUtils.consume(response.getEntity());
-                    log.info("Found {} staff to import", staffToImport.size());
-                    for (StaffResponse person : staffToImport) {
-                        if (person != null) {
-                            Staff s = Staff.fromStaffResponse(person);
-                            staffToAdd.add(s);
-                        }
-                    }
-                    staffObservableList.setAll(staffToAdd);         // Adding items one at a time to the ObserableList
-                    // would cause duplicates to show up until an item
-                    // was selected. Adding all at once seems to prevent
-                    // this.
-                    } catch (Exception ex) {
-                    log.error("Error loading staff", ex);
-                }
-
-                return null;
-            }
-        };
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
-    }
 
     public ObservableList<Staff> getStaffObservableList() {
         return staffObservableList;
