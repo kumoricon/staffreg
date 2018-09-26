@@ -9,7 +9,7 @@ import java.time.Period;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class Staff {
+public class Staff implements Comparable {
     private StringProperty firstName = new SimpleStringProperty();
     private StringProperty lastName = new SimpleStringProperty();
     private StringProperty legalFirstName = new SimpleStringProperty();
@@ -306,6 +306,32 @@ public class Staff {
     public Integer getCurrentAge() {
         if (birthDate.getValue() != null) {
             return Period.between(birthDate.getValue(), LocalDate.now()).getYears();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Staff staff = (Staff) o;
+
+        return uuid.equals(staff.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return uuid.hashCode();
+    }
+
+
+    @Override
+    public int compareTo(Object o) {
+        if (o.getClass().equals(Staff.class)) {
+            Staff other = (Staff) o;
+            return this.getName().compareTo(other.getName());
         } else {
             return 0;
         }
