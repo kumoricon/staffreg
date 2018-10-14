@@ -1,26 +1,25 @@
 package org.kumoricon.staffserver.badgeimage;
 
-import org.kumoricon.staffserver.imageupload.FileStorageException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import sun.misc.Resource;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.nio.file.*;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class BadgeImageService {
     private static final Logger log = LoggerFactory.getLogger(BadgeImageService.class);
     @Value("${staffreg.file.badgeimagepath}")
     private String badgeImagePathString;
+
+    @Value("staffreg.mascotfilename")
+    private String mascotFilename;
 
     private Path badgeImagePath;
 
@@ -73,6 +72,9 @@ public class BadgeImageService {
 
     File getFileFor(String fileName) {
         Path filePath = Paths.get(badgeImagePathString, fileName);
+        if (!filePath.toFile().exists()) {
+            filePath = Paths.get(badgeImagePathString, mascotFilename);
+        }
         return filePath.toFile();
     }
 }

@@ -16,6 +16,8 @@
     <modules>
         <module>client</module>
         <module>dto</module>
+        <module>badgelib</module>
+        <module>staffserver</module>
     </modules>
 
 </project>
