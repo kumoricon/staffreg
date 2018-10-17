@@ -65,10 +65,10 @@ public class BadgeCreatorStaff2018Front implements BadgeCreator {
         if (attendee != null) {
             Color bgColor = Color.decode(attendee.getDepartmentBackgroundColor());
             Color fgColor = BadgeImage.getInverseColor(bgColor);
-            Rectangle positionsBackground = new Rectangle(18, 0, 200, 1575);
+            Rectangle positionsBackground = new Rectangle(0, 0, 218, 1575);
             b.fillRect(positionsBackground, bgColor);
 
-            Rectangle textBounds = new Rectangle(0, 50, 200, 1475);
+            Rectangle textBounds = new Rectangle(45, 50, 150, 1475);
             b.drawRotatedCenteredStrings(attendee.getPositions(), textBounds, font, fgColor, true);
         }
     }
