@@ -18,10 +18,6 @@ public class App
             System.out.println("Number of open fd: " + ((UnixOperatingSystemMXBean) os).getOpenFileDescriptorCount());
         }
 
-//        b.addAgeRange("Adult", 18, 255, adultCost, "#323E99", "Adult");
-//        b.addAgeRange("Youth", 13, 17, youthCost, "#FFFF00", "Youth");
-//        b.addAgeRange("Child", 6, 12, childCost, "#CC202A", "Child");
-
         try (InputStream chibi = new BufferedInputStream(new FileInputStream(new File("2018mascot.png")))) {
             Image staffImage = ImageIO.read(chibi);
 
@@ -41,7 +37,7 @@ public class App
 
             File template = new File("staffbadge.pdf");
 
-            StaffBadgePrintFormatter formatter = new StaffBadgePrintFormatter(staff, template, 0, 0);
+            StaffBadgePrintFormatter formatter = new StaffBadgePrintFormatter(staff, template, null,0, 0);
 
             try {
                 InputStream inputStream = formatter.getStream();

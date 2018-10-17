@@ -18,7 +18,7 @@ public class BadgeImageService {
     @Value("${staffreg.file.badgeimagepath}")
     private String badgeImagePathString;
 
-    @Value("staffreg.mascotfilename")
+    @Value("${staffreg.mascotfilename}")
     private String mascotFilename;
 
     private Path badgeImagePath;
@@ -70,7 +70,11 @@ public class BadgeImageService {
         }
     }
 
-    File getFileFor(String fileName) {
+    public File getMascotFile() {
+        return getFileFor(mascotFilename);
+    }
+
+    public File getFileFor(String fileName) {
         Path filePath = Paths.get(badgeImagePathString, fileName);
         if (!filePath.toFile().exists()) {
             filePath = Paths.get(badgeImagePathString, mascotFilename);

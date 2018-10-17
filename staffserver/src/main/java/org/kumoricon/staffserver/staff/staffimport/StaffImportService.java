@@ -21,6 +21,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Component
@@ -105,13 +107,22 @@ public class StaffImportService {
 
     private void updateStaffFromPerson(Staff staff, StaffImportFile.Person person) {
         // TOOD: Corner cases here!
+        List<String> positions = new ArrayList<>();
+        for (StaffImportFile.Position p : person.getPositions()) {
+            positions.add(p.title);
+        }
+
         if (staff.getUuid() == null || !staff.getUuid().equals(person.getId()) ||
                 !staff.getFirstName().equals(person.getNamePreferredFirst()) ||
                 !staff.getLastName().equals(person.getNamePreferredLast()) ||
                 !staff.getLegalFirstName().equals(person.getNameOnIdFirst()) ||
                 !staff.getLegalLastName().equals(person.getNameOnIdLast()) ||
                 !staff.getBirthDate().toString().equals(person.getBirthdate()) ||
-                !staff.getShirtSize().equals(person.gettShirtSize())
+                !staff.getShirtSize().equals(person.gettShirtSize()) ||
+                !staff.getPositions().equals(positions) ||
+                !staff.getAgeCategoryAtCon().equals(person.getAgeCategoryConCurrentTerm()) ||
+                !staff.getHasBadgeImage().equals(person.getHasBadgeImage()) ||
+                !staff.getBadgeImageFileType().equals(person.getBadgeImageFileType())
         ) {
             staff.setLastModifiedMS(Instant.now().toEpochMilli());
         }
@@ -122,11 +133,62 @@ public class StaffImportService {
         staff.setLegalLastName(person.getNameOnIdLast());
         staff.setBirthDate(LocalDate.parse(person.getBirthdate()));
         staff.setShirtSize(person.gettShirtSize());
+        staff.setPositions(positions);
+        staff.setAgeCategoryAtCon(person.getAgeCategoryConCurrentTerm());
+        staff.setPositions(positions);
+        staff.setHasBadgeImage(person.getHasBadgeImage());
+        staff.setBadgeImageFileType(person.getBadgeImageFileType());
 
         if (person.getPositions().size() >0) {
             staff.setDepartment(person.getPositions().get(0).department);
-            staff.setPosition(person.getPositions().get(0).title);
             staff.setSuppressPrintingDepartment(person.getPositions().get(0).departmentSuppressed);
+            staff.setDepartmentColorCode(findDepartmentColorCode(staff.getDepartment()));
+        } else {
+            log.warn("{} has no positions!", staff);
+        }
+    }
+
+    /**
+     * For a department name, lookup and return the HTML color code for their background
+     * @param department Department name
+     * @return String color code (ex: #FF00EC)
+     */
+    private static String findDepartmentColorCode(String department) {
+        String dept;
+        if (department == null) {
+            log.warn("Null department found");
+            return "#FFFFFF";
+        } else {
+            dept = department.toLowerCase();
+        }
+        if ("treasury".equals(dept)) {
+            return "#0a8141";
+        } else if ("department of the treasurer".equals(dept)) {
+            return "#0a8141";
+        } else if ("secretarial".equals(dept)) {
+            return "#3a53a5";
+        } else if ("department of the secretary".equals(dept)) {
+            return "#3953a4"; // Not sure which color code is correct, this is from 2016
+//            return "#3a53a5";
+        } else if ("relations".equals(dept)) {
+            return "#f282b4";
+        } else if ("publicity".equals(dept)) {
+            return "#e0e0e0";
+        } else if ("programming".equals(dept)) {
+            return "#6b52a2";
+        } else if ("operations".equals(dept)) {
+            return "#ec2426";
+        } else if ("membership".equals(dept)) {
+            return "#f57f20";
+        } else if ("infrastructure".equals(dept)) {
+            return "#414242";
+        } else if ("chair".equals(dept)) {
+            return "#f99f1d";
+        } else if ("department of the chair".equals(dept)) {
+            return "#f99f1d";
+        } else {
+            log.warn("Warning, couldn't find color code for " + department);
+            return "#FFFFFF";
         }
     }
 

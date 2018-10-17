@@ -14,7 +14,12 @@ import javax.print.DocPrintJob;
 import javax.print.PrintService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -47,6 +52,30 @@ public class StaffController {
             staffResponses.add(s.toStaffResponse());
         }
         return staffResponses;
+    }
+
+    @RequestMapping(value = "/staff/buildbadges", method = RequestMethod.POST)
+    public String buildBadges(HttpServletRequest request, HttpServletResponse response) {
+        List<Staff> staffList = staffRepository.findAll();
+
+        long count = 0;
+        long total = staffList.size();
+        long start = System.currentTimeMillis();
+        for (Staff staff : staffList) {
+            count += 1;
+            File targetFile = new File("/tmp/" + staff.getUuid() + "-" + staff.getLastName() + ".pdf");
+            log.info("Saving badge {}/{} for {} {} to {}", count, total, staff.getFirstName(), staff.getLastName(), targetFile);
+            try (InputStream badgePDF = badgeService.buildBadge(staff, 0, 0)) {
+                Files.copy(badgePDF, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (Exception ex) {
+                log.error("Error printing all badges for {}", request.getRemoteUser(), ex);
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return "Error: " + ex.getMessage();
+            }
+        }
+        long finish = System.currentTimeMillis();
+        log.info("Created {} badges in {} ms", count, finish-start);
+        return "Success!";
     }
 
     @RequestMapping(value = "/staff/{staffId:[a-zA-Z0-9\\-]+}/printBadge/{printerName:[a-zA-Z0-9\\-_]+}", method = RequestMethod.POST)

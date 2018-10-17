@@ -41,6 +41,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/healthcheck").permitAll()
                 .antMatchers("/users/**").hasRole("ADMIN")
+                .antMatchers("/staff/buildbadges").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().httpBasic()
                 .authenticationEntryPoint(authEntryPoint);
@@ -57,7 +58,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 "       join users_roles where users_roles.user_id = users.id AND" +
                 "                        users_roles.role_id = roles.id AND username=?")
         .usersByUsernameQuery("select username, password, enabled from users where username=? AND enabled=true");
-//        auth.inMemoryAuthentication().withUser(User.withDefaultPasswordEncoder().username("test").password("password").roles("USER"));
     }
 
 }

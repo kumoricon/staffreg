@@ -13,6 +13,7 @@ import org.kumoricon.staff.badgelib.badgeimage.BadgeCreatorStaff2018Front;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.*;
 
 
@@ -21,18 +22,27 @@ public class StaffBadgePrintFormatter{
 
     private final BadgeCreator badgeCreatorFront = new BadgeCreatorStaff2018Front();
     private final BadgeCreator badgeCreatorBack = new BadgeCreatorStaff2018Back();
-    private static final Logger LOGGER = LoggerFactory.getLogger(StaffBadgePrintFormatter.class);
+    private static final Logger log = LoggerFactory.getLogger(StaffBadgePrintFormatter.class);
     private Integer xOffset = 0;
     private Integer yOffset = 0;
 
     /**
      * Generates a PDF containing badge ready to be printed
      */
-    public StaffBadgePrintFormatter(StaffBadgeDTO attendee, File backgroundFile, int xOffset, int yOffset) {
+    public StaffBadgePrintFormatter(StaffBadgeDTO attendee, File backgroundFile, File fontFile, int xOffset, int yOffset) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
         PDDocument document = null;
         PDDocument templateDocument = null;
+
+        Font font = null;
+        if (fontFile != null) {
+            try (InputStream fontStream = new FileInputStream(fontFile)) {
+                font = Font.createFont(Font.TRUETYPE_FONT, fontStream);
+            } catch (FontFormatException | IOException e) {
+                log.warn("Error loading font {}, using default", fontFile, e);
+            }
+        }
 
         try {
             document = new PDDocument();
@@ -48,8 +58,8 @@ public class StaffBadgePrintFormatter{
                 backBackground = document.importPage(templateDocument.getPage(1));
             }
 
-            byte[] badgeImage = badgeCreatorFront.createBadge(attendee);
-            byte[] badgeImageBack = badgeCreatorBack.createBadge(attendee);
+            byte[] badgeImage = badgeCreatorFront.createBadge(attendee, font);
+            byte[] badgeImageBack = badgeCreatorBack.createBadge(attendee, font);
 
             PDPageContentStream contentStream = new PDPageContentStream(document, frontBackground, PDPageContentStream.AppendMode.APPEND, true, false);
             PDImageXObject pdi = PDImageXObject.createFromByteArray(document, badgeImage, attendee.getFirstName()+attendee.getLastName() + ".png");
@@ -65,7 +75,7 @@ public class StaffBadgePrintFormatter{
             document.close();
 
         } catch (IOException e) {
-            LOGGER.error("Error creating badge", e);
+            log.error("Error creating badge", e);
             throw new RuntimeException(e);
         } finally {
             tryCloseDocument(document);

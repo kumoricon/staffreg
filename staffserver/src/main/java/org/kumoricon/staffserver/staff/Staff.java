@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "staff")
@@ -27,13 +28,20 @@ public class Staff {
     private String shirtSize;
     @NotNull
     private String department;
-    @NotNull
-    private String position;
+    private String departmentColorCode;
+
+    @ElementCollection
+    @CollectionTable(name="staff_positions", joinColumns=@JoinColumn(name="id"))
+    private List<String> positions;
     @NotNull
     private Boolean suppressPrintingDepartment;
     private Boolean checkedIn;
     private LocalDate birthDate;
+    private String ageCategoryAtCon;
     private Boolean deleted;
+    @NotNull
+    private Boolean hasBadgeImage;
+    private String badgeImageFileType;
     private Instant checkedInAt;
     @NotNull
     private Long lastModifiedMS;
@@ -107,12 +115,44 @@ public class Staff {
         this.department = department;
     }
 
-    public String getPosition() {
-        return position;
+    public String getDepartmentColorCode() {
+        return departmentColorCode;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setDepartmentColorCode(String departmentColorCode) {
+        this.departmentColorCode = departmentColorCode;
+    }
+
+    public List<String> getPositions() {
+        return positions;
+    }
+
+    public Boolean getHasBadgeImage() {
+        return hasBadgeImage;
+    }
+
+    public void setHasBadgeImage(Boolean hasBadgeImage) {
+        this.hasBadgeImage = hasBadgeImage;
+    }
+
+    public String[] getPositionsArray() {
+        String[] positionsArray = new String[positions.size()];
+        for (int i = 0; i < positions.size(); i++) {
+            positionsArray[i] = positions.get(i);
+        }
+        return positionsArray;
+    }
+
+    public void setPositions(List<String> positions) {
+        this.positions = positions;
+    }
+
+    public String getAgeCategoryAtCon() {
+        return ageCategoryAtCon;
+    }
+
+    public void setAgeCategoryAtCon(String ageCategoryAtCon) {
+        this.ageCategoryAtCon = ageCategoryAtCon;
     }
 
     public Boolean getSuppressPrintingDepartment() {
@@ -153,6 +193,14 @@ public class Staff {
 
     public void setCheckedInAt(Instant checkedInAt) {
         this.checkedInAt = checkedInAt;
+    }
+
+    public String getBadgeImageFileType() {
+        return badgeImageFileType;
+    }
+
+    public void setBadgeImageFileType(String badgeImageFileType) {
+        this.badgeImageFileType = badgeImageFileType;
     }
 
     public Long getLastModifiedMS() {

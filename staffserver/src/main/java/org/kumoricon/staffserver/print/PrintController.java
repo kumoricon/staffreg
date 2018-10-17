@@ -1,6 +1,5 @@
 package org.kumoricon.staffserver.print;
 
-import org.kumoricon.staff.dto.PrintBadgeResponse;
 import org.kumoricon.staff.dto.PrinterResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
