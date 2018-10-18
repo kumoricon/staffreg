@@ -24,14 +24,11 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class StafflistService {
     private final ObservableList<Staff> staffObservableList = FXCollections.observableArrayList();
-    private final ObservableMap<UUID, Staff> staffObservableMap = new SimpleMapProperty<>();
     private static final Logger log = LoggerFactory.getLogger(StafflistService.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private AtomicInteger i = new AtomicInteger(0);
@@ -65,6 +62,10 @@ public class StafflistService {
                             throw new RuntimeException("HTTP status " + response.getStatusLine().getStatusCode());
                         }
 
+                        Map<String, Staff> currentStaffMap = new HashMap<>();
+                        staffObservableList.forEach(current -> {
+                            currentStaffMap.put(current.getUuid(), current);
+                        });
 
                         List<Staff> staffToAdd = new ArrayList<>();
                         try {
@@ -72,13 +73,23 @@ public class StafflistService {
 
                             EntityUtils.consume(response.getEntity());
                             log.info("Found {} staff to import", staffToImport.size());
-                            for (StaffResponse person : staffToImport) {
-                                if (person != null) {
-                                    Staff s = Staff.fromStaffResponse(person);
-                                    staffToAdd.add(s);
+                            for (StaffResponse incomingRecord : staffToImport) {
+                                if (incomingRecord != null) {
+                                    Staff incoming = Staff.fromStaffResponse(incomingRecord);
+                                    Staff existing = currentStaffMap.get(incoming.getUuid());
+                                    if (existing == null) {
+                                        staffToAdd.add(incoming);
+                                    } else if (existing.getLastModifiedAt() < incoming.getLastModifiedAt()) {
+                                        staffToAdd.add(incoming);
+                                        log.info("Existing record for {} is oudtated. Old timestamp: {} New timestamp: {}", incoming, existing.getLastModifiedAt(), incoming.getLastModifiedAt());
+                                    } else {
+                                        staffToAdd.add(existing);
+                                    }
                                 }
                             }
-                            staffObservableList.setAll(staffToAdd);         // Adding items one at a time to the ObserableList
+
+                            staffObservableList.setAll(staffToAdd);
+                            // Adding items one at a time to the ObserableList
                             // would cause duplicates to show up until an item
                             // was selected. Adding all at once seems to prevent
                             // this.

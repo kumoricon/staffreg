@@ -106,7 +106,7 @@ public class TransferService {
             @Override protected Void call() throws Exception {
                 Path[] files = {
                         Paths.get(settingsService.getWorkQueue() + staffFileName + "-1.jpg"),
-                        Paths.get(settingsService.getWorkQueue() + staffFileName + "-3.jpg")
+                        Paths.get(settingsService.getWorkQueue() + staffFileName + "-2.jpg")
                 };
 
                 int count = 0;

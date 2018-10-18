@@ -73,7 +73,7 @@ public class BadgeImageDownloadService {
         svc.setPeriod(Duration.seconds(15));
         svc.setRestartOnFailure(true);
         svc.setMaximumCumulativePeriod(Duration.minutes(1));
-        svc.start();
+//        svc.start();
     }
 
     @PostConstruct
@@ -131,6 +131,6 @@ public class BadgeImageDownloadService {
         svc.setPeriod(Duration.seconds(5));
         svc.setRestartOnFailure(true);
         svc.setMaximumCumulativePeriod(Duration.minutes(1));
-        svc.start();
+//        svc.start();
     }
 }

@@ -25,6 +25,7 @@ public class Staff implements Comparable {
     private BooleanProperty deleted = new SimpleBooleanProperty();
     private BooleanProperty suppressPrintingDepartment = new SimpleBooleanProperty();
     private Instant checkedInAt;
+    private LongProperty lastModifiedAt = new SimpleLongProperty();
 
     private Staff() {}
 
@@ -42,6 +43,7 @@ public class Staff implements Comparable {
         this.birthDate.setValue(LocalDate.of(2010, 1, 1));
         this.suppressPrintingDepartment.setValue(false);
         this.badgePrinted.setValue(false);
+        this.lastModifiedAt.setValue(Instant.now().toEpochMilli());
     }
 
     public static Staff fromStaffResponse(StaffResponse person) {
@@ -60,6 +62,8 @@ public class Staff implements Comparable {
         s.setDepartment(person.getDepartment());
         s.setBadgePrinted(person.getBadgePrinted());
         s.setSuppressPrintingDepartment(person.getSuppressPrintingDepartment());
+
+        s.setLastModifiedAt(person.getLastModifiedAt().toEpochMilli());
         return s;
     }
 
@@ -258,6 +262,18 @@ public class Staff implements Comparable {
 
     public void setSuppressPrintingDepartment(boolean suppressPrintingDepartment) {
         this.suppressPrintingDepartment.set(suppressPrintingDepartment);
+    }
+
+    public long getLastModifiedAt() {
+        return lastModifiedAt.get();
+    }
+
+    public LongProperty lastModifiedAtProperty() {
+        return lastModifiedAt;
+    }
+
+    public void setLastModifiedAt(long lastModifiedAt) {
+        this.lastModifiedAt.set(lastModifiedAt);
     }
 
     @Override

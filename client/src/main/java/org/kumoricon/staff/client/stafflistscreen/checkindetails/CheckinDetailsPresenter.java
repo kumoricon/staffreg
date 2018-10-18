@@ -174,15 +174,17 @@ public class CheckinDetailsPresenter implements Initializable {
     public void saveSignatureClicked() {
         log.info("Saving signature");
         staff.setSignatureSaved(true);
-        String filename = staff.getFilename() + "-3.jpg";
+        String filename = staff.getFilename() + "-2.jpg";
 
         BufferedImage image = sigpadService.getImage();
         File outputFile = new File(settings.getWorkQueue() + filename);
 
         try {
-            log.info("Writing file to " + outputFile.getAbsolutePath());
             if (image != null) {
+                log.info("Writing file to " + outputFile.getAbsolutePath());
                 ImageIO.write(image, "jpg", outputFile);
+            } else {
+                log.warn("Signature not captured, image was null");
             }
             setViewState();
         } catch (IOException ex) {
@@ -201,6 +203,11 @@ public class CheckinDetailsPresenter implements Initializable {
         StaffEvent e = eventFactory.buildCheckInEvent(staff);
         transferService.moveImagesToOutboundDirectory(staff.getFilename());
         transferService.queueEventToSend(e);
+
+        staff.setCheckedIn(true);
+        staff.setCheckedInAt(Instant.now());
+        staff.setBadgePrinted(true);
+        staff.setLastModifiedAt(Instant.now().toEpochMilli());
 
         if (staff.isBadgePrinted()) {
             Alert alert = new Alert(Alert.AlertType.NONE, "Badge for " + staff.getName() + " already printed", ButtonType.OK);
@@ -222,9 +229,6 @@ public class CheckinDetailsPresenter implements Initializable {
             }
         }
 
-        staff.setCheckedIn(true);
-        staff.setCheckedInAt(Instant.now());
-        staff.setBadgePrinted(true);
         setViewState();
     }
 
