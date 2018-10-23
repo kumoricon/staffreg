@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import org.kumoricon.staff.client.PrintService;
+import org.kumoricon.staff.client.PrinterService;
 import org.kumoricon.staff.client.SettingsService;
 import org.kumoricon.staff.client.TransferService;
 import org.kumoricon.staff.client.ViewModel;
@@ -61,7 +61,7 @@ public class CheckinDetailsPresenter implements Initializable {
     TransferService transferService;
 
     @Inject
-    PrintService printService;
+    PrinterService printerService;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -206,14 +206,14 @@ public class CheckinDetailsPresenter implements Initializable {
 
         staff.setCheckedIn(true);
         staff.setCheckedInAt(Instant.now());
-        staff.setBadgePrinted(true);
         staff.setLastModifiedAt(Instant.now().toEpochMilli());
 
         if (staff.isBadgePrinted()) {
             Alert alert = new Alert(Alert.AlertType.NONE, "Badge for " + staff.getName() + " already printed", ButtonType.OK);
             alert.show();
         } else {
-            String printerName = printService.printBadge(staff);
+            staff.setBadgePrinted(true);
+            String printerName = printerService.print(staff);
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                     "Printed badge for " + staff.getName() + " on printer " + printerName + ". Did it print successfully?",
                     ButtonType.YES,
@@ -224,7 +224,7 @@ public class CheckinDetailsPresenter implements Initializable {
 
             while (alert.getResult() == ButtonType.NO) {
                 log.warn("User reported printing failed, retrying");
-                printService.printBadge(staff);
+                printerService.print(staff);
                 alert.showAndWait();
             }
         }
@@ -237,7 +237,7 @@ public class CheckinDetailsPresenter implements Initializable {
         log.info("Reprint Clicked");
         StaffEvent e = eventFactory.buildReprintEvent(staff);
         transferService.queueEventToSend(e);
-        printService.printBadge(staff);
+        printerService.print(staff);
     }
 
 

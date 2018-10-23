@@ -11,7 +11,7 @@
     <children>
         <TextField fx:id="txtUsername" layoutX="280.0" layoutY="66.0" prefHeight="26.0" prefWidth="204.0" promptText="Username" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="66.0" />
         <PasswordField fx:id="txtPassword" layoutX="266.0" layoutY="109.0" prefHeight="26.0" prefWidth="304.0" promptText="Password" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="109.0" />
-        <TextField fx:id="txtServerURL" layoutX="266.0" layoutY="160.0" prefHeight="26.0" prefWidth="304.0" promptText="Server URL" text="http://localhost:8080" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="160.0" />
+        <TextField fx:id="txtServerURL" layoutX="266.0" layoutY="160.0" prefHeight="26.0" prefWidth="304.0" promptText="Server URL" text="http://localhost:9080" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="160.0" />
         <Button fx:id="btnLogin" defaultButton="true" layoutX="562.0" layoutY="209.0" mnemonicParsing="false" onAction="#loginClicked" text="Login" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="209.0" />
         <Button fx:id="btnCancel" cancelButton="true" layoutX="484.0" layoutY="209.0" mnemonicParsing="false" onAction="#quitClicked" text="Cancel" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="209.0" />
       <Label layoutX="200.0" layoutY="71.0" text="Username:" textAlignment="RIGHT" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="71.0" />

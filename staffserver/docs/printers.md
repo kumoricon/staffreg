@@ -19,6 +19,10 @@ HP Laserjet M251nw
 Note: printer does not come with a duplex feature.
 
 Working CUPS drivers:
-- LaserJet 200 color M251nw     (Tested on Ubuntu 18.04, prints 2 pages instead of duplex)
-- HP LaserJet 200 color M251nw, driverless, cups-filters 1.20.2 (Tested on Ubuntu 18.04, no duplex)
+- HP Color LaserJet Series PCL 6 CUPS (Tested on Ubuntu 18.04)
+
+Does not work:
 - HP LaserJet 200 color M251 Postscript (recommended) (Tested on Ubuntu 18.04, no duplex)
+- LaserJet 200 color M251nw     (Tested on Ubuntu 18.04, does not rotate page when PDF is landscape)
+- HP LaserJet 200 color M251nw, driverless, cups-filters 1.20.2 (Tested on Ubuntu 18.04, does not rotate page when PDF is landscape)
+

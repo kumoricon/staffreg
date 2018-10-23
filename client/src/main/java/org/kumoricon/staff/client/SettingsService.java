@@ -19,9 +19,11 @@ public class SettingsService {
 
     private final SimpleStringProperty clientId = new SimpleStringProperty();
     private final SimpleIntegerProperty webcamId = new SimpleIntegerProperty();
+    private final SimpleStringProperty printerName = new SimpleStringProperty();
 
     private static final String CLIENT_ID_NAME = "clientId";
     private static final String WEBCAM_ID_NAME = "webcam";
+    private static final String PRINTER_NAME_NAME = "printerName";
 
     @PostConstruct
     public void init() {
@@ -44,6 +46,10 @@ public class SettingsService {
                 webcamId.set(prefs.getInt(WEBCAM_ID_NAME, 0));
                 prefs.putInt(WEBCAM_ID_NAME, webcamId.getValue());
                 log.info("Webcam ID: " + webcamId.getValue());
+
+                printerName.set(prefs.get(PRINTER_NAME_NAME, ""));
+                prefs.put(PRINTER_NAME_NAME, printerName.getValue());
+                log.info("Using printer: " + printerName);
                 return null;
             }
         };
@@ -77,6 +83,18 @@ public class SettingsService {
         this.webcamId.set(webcamId);
     }
 
+    public String getPrinterName() {
+        return printerName.get();
+    }
+
+    public SimpleStringProperty printerNameProperty() {
+        return printerName;
+    }
+
+    public void setPrinterName(String printerName) {
+        this.printerName.set(printerName);
+    }
+
     public void saveSettings() {
         Task<Void> task = new Task<Void>() {
             @Override protected Void call() throws Exception {
@@ -84,6 +102,7 @@ public class SettingsService {
                 log.info("Saving settings to " + prefs.absolutePath());
                 prefs.put(CLIENT_ID_NAME, clientId.getValue());
                 prefs.putInt(WEBCAM_ID_NAME, webcamId.getValue());
+                prefs.put(PRINTER_NAME_NAME, printerName.getValue());
                 return null;
             }
         };

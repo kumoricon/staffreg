@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import org.kumoricon.staff.client.SettingsService;
 import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.stafflistscreen.StafflistView;
+import org.kumoricon.staff.client.PrinterService;
 import org.kumoricon.staff.client.stafflistscreen.checkindetails.WebcamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +31,19 @@ public class PreferencesPresenter implements Initializable {
     ComboBox<Webcam> cmbWebcam;
 
     @FXML
-    Button btnSave, btnCancel;
+    ComboBox<String> cmbPrinter;
+
+    @FXML
+    Button btnSave, btnCancel, btnRefreshPrinters;
 
     @Inject
     SettingsService settingsService;
 
     @Inject
     WebcamService webcamService;
+
+    @Inject
+    PrinterService printerService;
 
     @Inject
     ViewModel viewModel;
@@ -48,6 +55,7 @@ public class PreferencesPresenter implements Initializable {
         viewModel.disableRefreshMenu(true);
 
         cmbWebcam.setItems(webcamService.getAvailableWebcams());
+        cmbPrinter.setItems(printerService.getAvailablePrinters());
     }
 
 
@@ -68,7 +76,16 @@ public class PreferencesPresenter implements Initializable {
         view.getViewAsync(viewModel::setMainView);
     }
 
+    public void refreshPrintersClicked() {
+        printerService.refreshPrinterList();
+    }
+
     public void webcamSelected(ActionEvent actionEvent) {
         settingsService.setWebcamId(cmbWebcam.getSelectionModel().getSelectedIndex());
     }
+
+    public void printerSelected(ActionEvent actionEvent) {
+        settingsService.setPrinterName(cmbPrinter.getSelectionModel().getSelectedItem());
+    }
+
 }

@@ -6,11 +6,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.181" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kumoricon.staff.client.preferencesscreen.PreferencesPresenter">
+<AnchorPane VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kumoricon.staff.client.preferencesscreen.PreferencesPresenter">
     <children>
         <Button fx:id="btnSave" defaultButton="true" layoutX="562.0" layoutY="209.0" mnemonicParsing="false" onAction="#saveClicked" text="Save" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="209.0" />
         <Button fx:id="btnCancel" cancelButton="true" layoutX="484.0" layoutY="209.0" mnemonicParsing="false" onAction="#cancelClicked" text="Cancel" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="209.0" />
       <Label layoutX="14.0" layoutY="14.0" text="Webcam" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
-      <ComboBox fx:id="cmbWebcam" layoutX="78.0" layoutY="10.0" onAction="#webcamSelected" prefHeight="25.0" prefWidth="251.0" AnchorPane.leftAnchor="78.0" AnchorPane.rightAnchor="441.0" AnchorPane.topAnchor="10.0" />
+      <ComboBox fx:id="cmbWebcam" layoutX="78.0" layoutY="10.0" onAction="#webcamSelected" prefHeight="26.0" prefWidth="343.0" AnchorPane.leftAnchor="78.0" AnchorPane.rightAnchor="349.0" AnchorPane.topAnchor="10.0" />
+      <ComboBox fx:id="cmbPrinter" onAction="#printerSelected" layoutX="78.0" layoutY="46.0" prefHeight="26.0" prefWidth="343.0" />
+      <Label layoutX="27.0" layoutY="51.0" text="Printer" />
+      <Button fx:id="btnRefreshPrinters" onAction="#refreshPrintersClicked" layoutX="428.0" layoutY="46.0" mnemonicParsing="false" text="Refresh" />
     </children>
 </AnchorPane>
