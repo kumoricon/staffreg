@@ -51,6 +51,7 @@
         <dependency>
             <groupId>com.topaz.sigplus</groupId>
             <artifactId>sigplus</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.bidib.jbidib.org.qbang.rxtx</groupId>
@@ -111,12 +112,6 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
             <version>4.3.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
         </dependency>
 
         <dependency>
