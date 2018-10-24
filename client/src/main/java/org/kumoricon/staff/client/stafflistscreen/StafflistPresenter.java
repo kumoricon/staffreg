@@ -58,8 +58,13 @@ public class StafflistPresenter implements Initializable {
 
         staffSortedList.comparatorProperty().bind(tblStaff.comparatorProperty());
 
+        tblStaff.setOnMouseClicked(event -> {
+            staffClicked();
+        });
+        // Listen for changes from keystrokes. Null checks are so updating the list in the
+        // background doesn't trigger staffClicked()
         tblStaff.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
+            if (newSelection != null && oldSelection != null && !newSelection.getUuid().equals(oldSelection.getUuid())) {
                 staffClicked();
             }
         });
