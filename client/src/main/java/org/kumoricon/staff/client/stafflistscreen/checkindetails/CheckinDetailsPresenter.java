@@ -213,9 +213,10 @@ public class CheckinDetailsPresenter implements Initializable {
             alert.show();
         } else {
             staff.setBadgePrinted(true);
-            String printerName = printerService.print(staff);
+
+            String printerMessage = printerService.print(staff);
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Printed badge for " + staff.getName() + " on printer " + printerName + ". Did it print successfully?",
+                    printerMessage,
                     ButtonType.YES,
                     ButtonType.NO);
             // Note: Buttons will be shown in platform specific order. Eg, on Windows it will be "Yes No"

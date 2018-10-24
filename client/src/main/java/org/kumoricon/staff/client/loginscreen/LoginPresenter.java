@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
+import org.kumoricon.staff.client.SettingsService;
 import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.stafflistscreen.StafflistView;
 import org.kumoricon.staff.dto.LoginResponse;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 
 public class LoginPresenter implements Initializable {
@@ -33,6 +35,9 @@ public class LoginPresenter implements Initializable {
     LoginService loginService;
 
     @Inject
+    SettingsService settingsService;
+
+    @Inject
     ViewModel viewModel;
 
     @Override
@@ -40,7 +45,10 @@ public class LoginPresenter implements Initializable {
         log.info("LoginView Initializing");
         viewModel.disablePreferencesMenu(true);
         viewModel.disableRefreshMenu(true);
+
+        txtServerURL.textProperty().setValue(settingsService.getHostUrl());
     }
+
 
 
     public void loginClicked() {
@@ -48,6 +56,9 @@ public class LoginPresenter implements Initializable {
             String username = txtUsername.getText();
             String password = txtPassword.getText();
             String serverUrl = txtServerURL.getText();
+
+            settingsService.setHostUrl(serverUrl);
+            settingsService.saveSettings();
 
             LoginResponse response = loginService.login(username, password, serverUrl);
             if (response.isPasswordChangeRequired()) {

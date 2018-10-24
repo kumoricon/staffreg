@@ -48,10 +48,10 @@ public class PrinterService {
         try {
             tryPrint(staff.getUuid(), settingsService.getPrinterName());
         } catch (IOException ex) {
-            log.error("Login error", ex);
-            return "Error printing to " + settingsService.getPrinterName() + ": " + ex.getMessage();
+            log.error("Printer error", ex);
+            return "Error printing to " + settingsService.getPrinterName() + ": " + ex.getMessage() +". Try again?";
         }
-        return settingsService.getPrinterName();
+        return "Printed badge for " + staff.getName() + " on printer " + settingsService.getPrinterName() + ". Did it print successfully?";
     }
 
     private void tryPrint(String staffId, String printerName) throws IOException {
@@ -67,7 +67,11 @@ public class PrinterService {
                         .execute()
                         .returnResponse();
         log.info("Print response: {}", response.getStatusLine());
-        if (response.getStatusLine().getStatusCode() != 202) {
+        if (response.getStatusLine().getStatusCode() == 404) {
+            throw new RuntimeException("Print not found (404)");
+        } else if (response.getStatusLine().getStatusCode() == 500) {
+            throw new RuntimeException("Server error (500)");
+        } else if (response.getStatusLine().getStatusCode() != 202) {
             throw new RuntimeException("HTTP status " + response.getStatusLine().getStatusCode());
         }
     }

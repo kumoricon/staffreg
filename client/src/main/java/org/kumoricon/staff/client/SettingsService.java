@@ -20,10 +20,13 @@ public class SettingsService {
     private final SimpleStringProperty clientId = new SimpleStringProperty();
     private final SimpleIntegerProperty webcamId = new SimpleIntegerProperty();
     private final SimpleStringProperty printerName = new SimpleStringProperty();
+    private final SimpleStringProperty hostUrl = new SimpleStringProperty();
 
+    private static final String SETTINGS_NODE_NAME = "StaffReg";
     private static final String CLIENT_ID_NAME = "clientId";
     private static final String WEBCAM_ID_NAME = "webcam";
     private static final String PRINTER_NAME_NAME = "printerName";
+    private static final String HOST_URL_NAME = "hostUrl";
 
     @PostConstruct
     public void init() {
@@ -36,7 +39,7 @@ public class SettingsService {
     private void loadSettingsAsync() {
         Task<Void> task = new Task<Void>() {
             @Override protected Void call() throws Exception {
-                Preferences prefs = Preferences.userRoot().node("StaffReg");
+                Preferences prefs = Preferences.userRoot().node(SETTINGS_NODE_NAME);
                 log.info("Loading settings from " + prefs.absolutePath());
 
                 clientId.set(prefs.get(CLIENT_ID_NAME, UUID.randomUUID().toString()));
@@ -50,6 +53,10 @@ public class SettingsService {
                 printerName.set(prefs.get(PRINTER_NAME_NAME, ""));
                 prefs.put(PRINTER_NAME_NAME, printerName.getValue());
                 log.info("Using printer: " + printerName);
+
+                hostUrl.set(prefs.get(HOST_URL_NAME, "http://localhost:9080"));
+                prefs.put(HOST_URL_NAME, hostUrl.getValue());
+                log.info("Host URL: " + hostUrl.getValue());
                 return null;
             }
         };
@@ -103,6 +110,7 @@ public class SettingsService {
                 prefs.put(CLIENT_ID_NAME, clientId.getValue());
                 prefs.putInt(WEBCAM_ID_NAME, webcamId.getValue());
                 prefs.put(PRINTER_NAME_NAME, printerName.getValue());
+                prefs.put(HOST_URL_NAME, hostUrl.getValue());
                 return null;
             }
         };
@@ -111,6 +119,18 @@ public class SettingsService {
         th.setDaemon(true);
         th.start();
 
+    }
+
+    public String getHostUrl() {
+        return hostUrl.get();
+    }
+
+    public SimpleStringProperty hostUrlProperty() {
+        return hostUrl;
+    }
+
+    public void setHostUrl(String hostUrl) {
+        this.hostUrl.set(hostUrl);
     }
 
     public String getBasePath() {
@@ -135,4 +155,5 @@ public class SettingsService {
     public SimpleIntegerProperty getWebcamProperty() {
         return webcamId;
     }
+
 }

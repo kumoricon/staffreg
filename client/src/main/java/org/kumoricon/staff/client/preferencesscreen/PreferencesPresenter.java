@@ -56,12 +56,16 @@ public class PreferencesPresenter implements Initializable {
 
         cmbWebcam.setItems(webcamService.getAvailableWebcams());
         cmbPrinter.setItems(printerService.getAvailablePrinters());
+
+        cmbWebcam.getSelectionModel().select(settingsService.getWebcamId());
+        cmbPrinter.getSelectionModel().select(settingsService.getPrinterName());
     }
 
 
     public void saveClicked() {
         log.info("Save");
         settingsService.setWebcamId(cmbWebcam.getSelectionModel().getSelectedIndex());
+        settingsService.setPrinterName(cmbPrinter.getSelectionModel().getSelectedItem());
         settingsService.saveSettings();
         goToStaffList();
     }
