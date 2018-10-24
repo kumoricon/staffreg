@@ -213,32 +213,36 @@ public class CheckinDetailsPresenter implements Initializable {
             alert.show();
         } else {
             staff.setBadgePrinted(true);
-
-            String printerMessage = printerService.print(staff);
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    printerMessage,
-                    ButtonType.YES,
-                    ButtonType.NO);
-            // Note: Buttons will be shown in platform specific order. Eg, on Windows it will be "Yes No"
-            alert.setHeaderText(null);
-            alert.showAndWait();
-
-            while (alert.getResult() == ButtonType.NO) {
-                log.warn("User reported printing failed, retrying");
-                printerService.print(staff);
-                alert.showAndWait();
-            }
+            tryPrintWithDialog(staff);
         }
 
         setViewState();
     }
 
+    private void tryPrintWithDialog(Staff staff) {
+
+        // TODO: I believe "YES" is always the default, which makes no sense the way the error messages are worded
+        String printerMessage = printerService.print(staff);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                printerMessage,
+                ButtonType.YES,
+                ButtonType.NO);
+        // Note: Buttons will be shown in platform specific order. Eg, on Windows it will be "Yes No"
+        alert.setHeaderText(null);
+        alert.showAndWait();
+
+        while (alert.getResult() == ButtonType.YES) {
+            log.warn("User reported printing failed, retrying");
+            printerService.print(staff);
+            alert.showAndWait();
+        }
+    }
 
     public void reprintClicked() {
         log.info("Reprint Clicked");
         StaffEvent e = eventFactory.buildReprintEvent(staff);
         transferService.queueEventToSend(e);
-        printerService.print(staff);
+        tryPrintWithDialog(staff);
     }
 
 

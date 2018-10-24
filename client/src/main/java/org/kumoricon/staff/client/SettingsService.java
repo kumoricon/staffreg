@@ -22,7 +22,7 @@ public class SettingsService {
     private final SimpleStringProperty printerName = new SimpleStringProperty();
     private final SimpleStringProperty hostUrl = new SimpleStringProperty();
 
-    private static final String SETTINGS_NODE_NAME = "StaffReg";
+    private static final String SETTINGS_NODE_NAME = "org.kumoricon.staffreg";
     private static final String CLIENT_ID_NAME = "clientId";
     private static final String WEBCAM_ID_NAME = "webcam";
     private static final String PRINTER_NAME_NAME = "printerName";
@@ -105,7 +105,7 @@ public class SettingsService {
     public void saveSettings() {
         Task<Void> task = new Task<Void>() {
             @Override protected Void call() throws Exception {
-                Preferences prefs = Preferences.userRoot().node("StaffReg");
+                Preferences prefs = Preferences.userRoot().node(SETTINGS_NODE_NAME);
                 log.info("Saving settings to " + prefs.absolutePath());
                 prefs.put(CLIENT_ID_NAME, clientId.getValue());
                 prefs.putInt(WEBCAM_ID_NAME, webcamId.getValue());
