@@ -1,0 +1,19 @@
+# StaffReg Systemd init file
+[Unit]
+Description=StaffReg registration management system
+Requires=mysql.service
+Requires=cups.service
+After=network.target
+After=cups.service
+After=mysql.service
+After=syslog.target
+
+[Service]
+User=staffreg
+Group=staffreg
+ExecStart=/usr/local/staffserver/staffserver.jar -Xmx1024m -Xms256m
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
+
