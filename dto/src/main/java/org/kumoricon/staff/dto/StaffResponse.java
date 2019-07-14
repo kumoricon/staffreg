@@ -2,7 +2,6 @@ package org.kumoricon.staff.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javafx.beans.property.BooleanProperty;
 
 import java.time.Instant;
 import java.time.LocalDate;
