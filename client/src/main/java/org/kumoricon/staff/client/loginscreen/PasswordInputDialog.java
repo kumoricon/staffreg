@@ -1,6 +1,5 @@
 package org.kumoricon.staff.client.loginscreen;
 
-import com.sun.javafx.scene.control.skin.resources.ControlResources;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.geometry.Pos;
@@ -20,9 +19,9 @@ public class PasswordInputDialog extends Dialog<String> {
     public PasswordInputDialog() {
         DialogPane dialogPane = this.getDialogPane();
         this.password1Field = new PasswordField();
-        this.password1Field.setMaxWidth(1.7976931348623157E308D);
+        this.password1Field.setMaxWidth(2);
         this.password2Field = new PasswordField();
-        this.password2Field.setMaxWidth(1.7976931348623157E308D);
+        this.password2Field.setMaxWidth(2);
 
         GridPane.setHgrow(this.password1Field, Priority.ALWAYS);
         GridPane.setFillWidth(this.password1Field, true);
@@ -34,11 +33,9 @@ public class PasswordInputDialog extends Dialog<String> {
 
         this.grid = new GridPane();
         this.grid.setHgap(10.0D);
-        this.grid.setMaxWidth(1.7976931348623157E308D);
+        this.grid.setMaxWidth(2);
         this.grid.setAlignment(Pos.CENTER_LEFT);
         dialogPane.contentTextProperty().addListener((o) -> this.updateGrid());
-        this.setTitle(ControlResources.getString("Dialog.confirm.title"));
-        dialogPane.setHeaderText(ControlResources.getString("Dialog.confirm.header"));
         dialogPane.getStyleClass().add("text-input-dialog");
         dialogPane.getButtonTypes().addAll(ButtonType.OK);
         dialogPane.lookupButton(ButtonType.OK).setDisable(true);
