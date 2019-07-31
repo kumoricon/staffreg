@@ -11,7 +11,7 @@ import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.heartbeat.HeartbeatService;
 import org.kumoricon.staff.client.loginscreen.LoginView;
 import org.kumoricon.staff.client.preferencesscreen.PreferencesView;
-import org.kumoricon.staff.client.stafflistscreen.checkindetails.WebcamService;
+import org.kumoricon.staff.client.stafflistscreen.step1photo.WebcamService;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -51,7 +51,6 @@ public class MainscreenPresenter implements Initializable {
         lblStatus.setText("");
         lblHeartbeat.setText("");
         rootPane.centerProperty().bind(viewModel.mainViewProperty());
-
         menuPreferences.disableProperty().bind(viewModel.preferencesMenuDisabledProperty());
         menuRefresh.disableProperty().bind(viewModel.refreshMenuDisabledProperty());
 

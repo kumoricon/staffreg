@@ -1,4 +1,4 @@
-package org.kumoricon.staff.client.stafflistscreen.checkindetails;
+package org.kumoricon.staff.client.stafflistscreen;
 
 import org.kumoricon.staff.client.SessionService;
 import org.kumoricon.staff.client.SettingsService;

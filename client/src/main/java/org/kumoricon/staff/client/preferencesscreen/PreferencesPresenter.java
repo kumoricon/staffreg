@@ -11,7 +11,7 @@ import org.kumoricon.staff.client.SettingsService;
 import org.kumoricon.staff.client.ViewModel;
 import org.kumoricon.staff.client.stafflistscreen.StafflistView;
 import org.kumoricon.staff.client.PrinterService;
-import org.kumoricon.staff.client.stafflistscreen.checkindetails.WebcamService;
+import org.kumoricon.staff.client.stafflistscreen.step1photo.WebcamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +23,6 @@ import java.util.ResourceBundle;
 
 public class PreferencesPresenter implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(PreferencesPresenter.class);
-
-    @FXML
-    TextField txtUsername;
 
     @FXML
     ComboBox<Webcam> cmbWebcam;

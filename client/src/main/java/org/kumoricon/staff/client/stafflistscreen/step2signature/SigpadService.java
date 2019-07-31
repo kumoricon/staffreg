@@ -1,6 +1,6 @@
-package org.kumoricon.staff.client.stafflistscreen.checkindetails;
+package org.kumoricon.staff.client.stafflistscreen.step2signature;
 
-//import com.topaz.sigplus.SigPlus;
+import com.topaz.sigplus.SigPlus;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,7 +15,7 @@ import java.beans.Beans;
 import java.io.IOException;
 
 public class SigpadService {
-//    private SigPlus sigPlus;
+    private SigPlus sigPlus;
     private static final Logger log = LoggerFactory.getLogger(SigpadService.class);
     private boolean stopSignaturePad;
     private BufferedImage signatureGrabbedImage;
@@ -26,25 +26,25 @@ public class SigpadService {
     }
 
     private void initializeSignaturePad() {
-        Task<Void> sigPadIntilizer = new Task<Void>() {
+        Task<Void> sigPadIntilizer = new Task<>() {
             @Override
             protected Void call() {
                 log.info("Initializing signature pad");
-//                ClassLoader cl = (com.topaz.sigplus.SigPlus.class).getClassLoader();
+                ClassLoader cl = (com.topaz.sigplus.SigPlus.class).getClassLoader();
                 log.info("Sigpad Path: " + System.getProperty("java.library.path"));
-//                try {
-//                    sigPlus = (SigPlus) Beans.instantiate( cl, "com.topaz.sigplus.SigPlus" );
-//
-//                    sigPlus.setTabletModel( "SignatureGemLCD1X5" );
-//                    sigPlus.setTabletComPort( "HID1" );
-//
-//                    sigPlus.setTabletState(1);
-//                    sigPlus.setImageXSize(640);
-//                    sigPlus.setImageYSize(128);
-//                    startSignatureStream();   // Just to add an empty box to the UI; should only be collecting the
-//                } catch (UnsatisfiedLinkError | NoClassDefFoundError | ClassNotFoundException | IOException ex) {
-//                    log.error("Error initializing signature pad", ex);
-//                }
+                try {
+                    sigPlus = (SigPlus) Beans.instantiate( cl, "com.topaz.sigplus.SigPlus" );
+
+                    sigPlus.setTabletModel( "SignatureGemLCD1X5" );
+                    sigPlus.setTabletComPort( "HID1" );
+
+                    sigPlus.setTabletState(1);
+                    sigPlus.setImageXSize(640);
+                    sigPlus.setImageYSize(128);
+                    startSignatureStream();   // Just to add an empty box to the UI; should only be collecting the
+                } catch (UnsatisfiedLinkError | NoClassDefFoundError | ClassNotFoundException | IOException ex) {
+                    log.error("Error initializing signature pad", ex);
+                }
 
                 return null;
             }
@@ -62,27 +62,25 @@ public class SigpadService {
         stopSignaturePad = true;
     }
 
-    protected void startSignatureStream() {
+    private void startSignatureStream() {
         log.debug("Starting signature Stream");
         stopSignaturePad = false;
-//        sigPlus.clearTablet();
-        Task<Void> task = new Task<Void>() {
+        sigPlus.clearTablet();
+        Task<Void> task = new Task<>() {
 
             @Override
             protected Void call() throws Exception {
                 while (!stopSignaturePad) {
                     try {
                         Thread.sleep(100);
-//                        if ((signatureGrabbedImage = sigPlus.sigImage()) != null) {
-//                            Platform.runLater(new Runnable() {
-//                                public void run() {
-//                                    final Image sigImage = SwingFXUtils
-//                                            .toFXImage(signatureGrabbedImage, null);
-//                                    sigImageProperty.set(sigImage);
-//                                }
-//                            });
-//                            signatureGrabbedImage.flush();
-//                        }
+                        if ((signatureGrabbedImage = sigPlus.sigImage()) != null) {
+                            Platform.runLater(() -> {
+                                final Image sigImage = SwingFXUtils
+                                        .toFXImage(signatureGrabbedImage, null);
+                                sigImageProperty.set(sigImage);
+                            });
+                            signatureGrabbedImage.flush();
+                        }
                     } catch (Exception e) {
                         log.error("Error streaming from signature pad", e);
                     }
@@ -98,12 +96,12 @@ public class SigpadService {
         th.start();
     }
 
-    public ObjectProperty<Image> getSigImageProperty() {
+    ObjectProperty<Image> getSigImageProperty() {
         return sigImageProperty;
     }
 
-    public void clearSignature() {
-//        sigPlus.clearTablet();
+    void clearSignature() {
+        sigPlus.clearTablet();
     }
 
     public BufferedImage getImage() {

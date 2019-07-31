@@ -23,7 +23,7 @@
     <repositories>
         <repository>
             <id>lib</id>
-            <url>file:${project.basedir}/lib</url>
+            <url>file://${project.basedir}/lib</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
@@ -156,6 +156,11 @@
             <groupId>org.kumoricon.staff</groupId>
             <artifactId>dto</artifactId>
             <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.topaz.sigplus</groupId>
+            <artifactId>SigPlus</artifactId>
+            <version>1.0</version>
         </dependency>
 
     </dependencies>

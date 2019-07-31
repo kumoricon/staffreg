@@ -4,53 +4,55 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.5" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="1.0"
-           AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="40.0" xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.kumoricon.staff.client.stafflistscreen.StafflistPresenter">
+<SplitPane dividerPositions="0.5" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="40.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kumoricon.staff.client.stafflistscreen.StafflistPresenter">
     <items>
         <AnchorPane minHeight="300.0" minWidth="300.0" prefHeight="160.0" prefWidth="100.0">
             <children>
-                <TextField fx:id="txtFilter" layoutX="14.0" layoutY="14.0" onKeyReleased="#filterChanged"
-                           prefHeight="26.0" prefWidth="239.0" promptText="Search" AnchorPane.leftAnchor="14.0"
-                           AnchorPane.rightAnchor="117.0" AnchorPane.topAnchor="7.0"/>
-                <TableView fx:id="tblStaff" layoutX="14.0" layoutY="56.0"
-                           AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0"
-                           AnchorPane.topAnchor="45.0">
+                <TextField fx:id="txtFilter" layoutX="14.0" layoutY="14.0" onKeyReleased="#filterChanged" prefHeight="26.0" prefWidth="239.0" promptText="Search" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="117.0" AnchorPane.topAnchor="7.0" />
+                <TableView fx:id="tblStaff" layoutX="14.0" layoutY="56.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="45.0">
                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
                     <columns>
-                        <TableColumn prefWidth="100.0" text="Name" fx:id="nameColumn">
+                        <TableColumn fx:id="nameColumn" prefWidth="100.0" text="Name">
                             <cellValueFactory>
-                                <PropertyValueFactory property="name"/>
+                                <PropertyValueFactory property="name" />
                             </cellValueFactory>
                         </TableColumn>
                         <TableColumn prefWidth="200.0" text="Department">
                             <cellValueFactory>
-                                <PropertyValueFactory property="department"/>
+                                <PropertyValueFactory property="department" />
                             </cellValueFactory>
                         </TableColumn>
 
-                        <TableColumn prefWidth="80.0" maxWidth="80" minWidth="80" text="Checked In">
+                        <TableColumn maxWidth="80" minWidth="80" prefWidth="80.0" text="Checked In">
                             <cellValueFactory>
-                                <PropertyValueFactory property="checkedIn"/>
+                                <PropertyValueFactory property="checkedIn" />
                             </cellValueFactory>
                         </TableColumn>
                     </columns>
                     <sortOrder>
-                        <fx:reference source="nameColumn"/>
+                        <fx:reference source="nameColumn" />
                     </sortOrder>
                 </TableView>
-                <Button layoutX="294.0" layoutY="14.0" mnemonicParsing="false" onAction="#clearClicked" text="Clear"
-                        AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="7.0"/>
+                <Button layoutX="294.0" layoutY="14.0" mnemonicParsing="false" onAction="#clearClicked" text="Clear" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="7.0" />
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"
-                    SplitPane.resizableWithParent="false"/>
+        <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="180.0" SplitPane.resizableWithParent="false">
+         <children>
+            <TextArea fx:id="txtDetails" editable="false" focusTraversable="false" layoutX="10.0" layoutY="86.0" prefHeight="200.0" prefWidth="162.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="86.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextArea>
+            <Button fx:id="btnReprint" layoutX="54.0" layoutY="49.0" mnemonicParsing="false" onAction="#reprintClicked" text="Reprint Badge" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="49.0" />
+            <Button fx:id="btnCheckIn" layoutX="89.0" layoutY="14.0" mnemonicParsing="false" onAction="#checkInClicked" text="Check In" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+         </children></AnchorPane>
     </items>
 </SplitPane>

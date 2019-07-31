@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Form;
@@ -112,8 +114,26 @@ public class PrinterService {
         t.start();
     }
 
-
     public ObservableList<String> getAvailablePrinters() {
         return availablePrinters;
+    }
+
+    public void tryPrintWithDialog(Staff staff) {
+
+        // TODO: I believe "YES" is always the default, which makes no sense the way the error messages are worded
+        String printerMessage = print(staff);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                printerMessage,
+                ButtonType.YES,
+                ButtonType.NO);
+        // Note: Buttons will be shown in platform specific order. Eg, on Windows it will be "Yes No"
+        alert.setHeaderText(null);
+        alert.showAndWait();
+
+        while (alert.getResult() == ButtonType.YES) {
+            log.warn("User reported printing failed, retrying");
+            print(staff);
+            alert.showAndWait();
+        }
     }
 }

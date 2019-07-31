@@ -19,9 +19,9 @@ public class PasswordInputDialog extends Dialog<String> {
     public PasswordInputDialog() {
         DialogPane dialogPane = this.getDialogPane();
         this.password1Field = new PasswordField();
-        this.password1Field.setMaxWidth(2);
+        this.password1Field.setMaxWidth(20);
         this.password2Field = new PasswordField();
-        this.password2Field.setMaxWidth(2);
+        this.password2Field.setMaxWidth(20);
 
         GridPane.setHgrow(this.password1Field, Priority.ALWAYS);
         GridPane.setFillWidth(this.password1Field, true);
