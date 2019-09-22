@@ -52,10 +52,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(passwordEncoder())
-        .authoritiesByUsernameQuery("select users.username as username, roles.name as authority" +
-                "       from users " +
-                "       join roles" +
-                "       join users_roles where users_roles.user_id = users.id AND" +
+        .authoritiesByUsernameQuery("select users.username as username, roles.name as authority " +
+                "                      from users " +
+                "                        join users_roles on users_roles.user_id = users.id " +
+                "                        join roles on users_roles.role_id = roles.id " +
+                "                      where users_roles.user_id = users.id AND " +
                 "                        users_roles.role_id = roles.id AND username=?")
         .usersByUsernameQuery("select username, password, enabled from users where username=? AND enabled=true");
     }

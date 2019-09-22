@@ -1,11 +1,11 @@
 # StaffReg Systemd init file
 [Unit]
 Description=StaffReg registration management system
-Requires=mysql.service
+Requires=postgresql.service
 Requires=cups.service
 After=network.target
 After=cups.service
-After=mysql.service
+After=postgresql.service
 After=syslog.target
 
 [Service]
