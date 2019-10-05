@@ -22,7 +22,7 @@ public class FileStorageService {
 
     private Path uploadPath;
 
-    String storeFile(MultipartFile file) {
+    public String storeFile(MultipartFile file) {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
         try {
