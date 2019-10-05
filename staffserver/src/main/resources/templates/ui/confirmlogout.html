@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Logout</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <form name="f" th:action="@{/logout}" method="post">
+        <h3 class="col-lg-8 form-signin-heading">Are you sure you want to log out?</h3>
+        <button class="col-lo-4 btn btn-lg btn-primary" type="submit">Log Out</button>
+    </form>
+</div>
+</body>
+</html>

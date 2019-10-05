@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>StaffReg</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" th:fragment="contentmenu">
+        <a class="navbar-brand" href="">StaffReg</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_registration'')')}">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Registration/Check-In</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <form method="post" action="/reg/atconorder/new" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <input class="dropdown-item" type="submit" value="New At Con Order">
+                        </form>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="/search">Attendee Search</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''attendee_search'')')}" href="/searchbybadge">Search by Badge Type</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_guest_badge'')')}" href="/guests">Guest Badges</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_orders'')')}" href="/orders">Orders</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_administration'')')}">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown02">
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_users'')')}" href="/admin/users">Users</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_roles'')')}" href="/admin/roles">Roles</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_pass_types'')')}" href="#"><s>Badge Types</s></a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_till_sessions'')')}" href="/admin/tillsessions">Till Sessions</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_active_sessions'')')}" href="/admin/loginsessions">Login Sessions</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''manage_blacklist'')')}" href="/admin/blacklist">Blacklist</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''import_pre_reg_data'')')}" href="/utility/attendeeimport">Import Attendees</a>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_report'')')}">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown03">
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_badge_type_report'')')}" href="/reports/checkinbybadgetype">Check Ins by Badge Type</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_hour_report'')')}" href="/reports/checkinbyhour">Check Ins by Hour</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_check_in_by_user_report'')')}" href="/reports/checkinbyuser">Check Ins by User</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_staff_report'')')}" href="/reports/staff">Staff</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_login_history_report'')')}" href="/reports/loginhistory">Login History</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_role_report'')')}" href="/reports/roles">Roles</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''view_till_report'')')}" href="/reports/tillsessions">Tills</a>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown" th:if="${#authorization.expression('hasAuthority(''menu_utility'')')}">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Utility</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')')}" href="/utility/till">Close Till Session</a>
+                        <a class="dropdown-item" th:if="${#authorization.expression('hasAuthority(''print_badge'')')}" href="/utility/printer">Select Printer</a>
+                        <a class="dropdown-item" th:if="${#authentication.isAuthenticated()}" href="/utility/userinfo">Current User Info</a>
+                    </div>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-3">
+                    <a class="nav-link" href="/utility/till" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')') && selectedTill==null}">Select Till</a>
+                    <a class="nav-link" href="/utility/till" th:if="${#authorization.expression('hasAuthority(''at_con_registration'')') && selectedTill!=null}" th:text="|Till ${selectedTill}|">Till 3</a>
+                </li>
+                <li class="nav-item mr-3">
+                    <a class="nav-link" href="/utility/printer" th:if="${#authorization.expression('hasAuthority(''print_badge'')') && selectedPrinter == null}">Select Printer</a>
+                    <a class="nav-link" href="/utility/printer" th:if="${#authorization.expression('hasAuthority(''print_badge'')') && selectedPrinter != null}" th:text="|Printer ${selectedPrinter}|">Printer 192.168.1.132</a>
+                </li>
+                <li class="nav-item">
+                    <form class="form-inline mt-2 mt-md-0" th:action="@{/confirmlogout}">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">(<span class="logout-username" sec:authentication="name"></span>) Logout</button>
+                    </form>
+                </li>
+
+            </ul>
+
+        </div>
+    </nav>
+
+    <div th:fragment="message">
+        <div class="alert alert-success" th:if="${msg}" th:text="${msg}">
+            Message parameter
+        </div>
+        <div class="alert alert-danger" th:if="${err}" th:text="${err}">
+            Message parameter
+        </div>
+    </div>
+
+    <main role="main" class="container">
+        <div class="jumbotron">
+            <h1>Example</h1>
+            <p>Content goes here</p>
+        </div>
+    </main>
+
+
+    <footer class="page-footer fixed-bottom font-small blue" th:fragment="footer">
+        <div class="footer-copyright text-center">Version 0.8.2</div>
+    </footer>
+
+</body>
+</html>

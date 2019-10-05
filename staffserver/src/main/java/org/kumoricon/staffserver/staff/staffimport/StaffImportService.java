@@ -99,6 +99,9 @@ public class StaffImportService {
             existing.setDeleted(false);
             existing.setBadgePrinted(false);
             existing.setBadgePrintCount(0);
+            existing.setInformationVerified(false);
+            existing.setPictureSaved(false);
+            existing.setSignatureSaved(false);
         }
 
         updateStaffFromPerson(existing, person);

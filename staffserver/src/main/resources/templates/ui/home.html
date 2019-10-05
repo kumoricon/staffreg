@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html layout:decorate="~{base}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <script src="/js/home.js"></script>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <input class="form-control" id="search" type="text" placeholder="Search here..." autofocus>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 mt-2">
+            <table class="table table-bordered table-sm" id="staffList">
+                <tr>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Check In Time</th>
+                    <th></th>
+                </tr>
+                <tr th:each="s : ${staff}">
+                    <td th:text="|${s.firstName} ${s.lastName}|">Firstname Lastname</td>
+                    <td th:text="${s.department}">Department</td>
+                    <td th:text="${s.checkedInAt} ? ${#temporals.format(s.checkedInAt, 'EEE MM/dd/yyyy h:mm:ss a zzz')} : ''">Check In Time</td>
+                    <td>
+                        <a th:href="@{/checkin/{uuid}(uuid=${s.uuid})}"
+                        th:if="!${s.checkedIn}" class="btn btn-sm btn-primary">Check In</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

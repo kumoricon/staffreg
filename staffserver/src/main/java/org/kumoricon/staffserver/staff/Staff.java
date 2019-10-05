@@ -50,6 +50,15 @@ public class Staff {
     @NotNull
     @ColumnDefault("0")
     private Integer badgePrintCount;
+    @NotNull
+    @ColumnDefault("false")
+    private Boolean informationVerified;
+    @NotNull
+    @ColumnDefault("false")
+    private Boolean pictureSaved;
+    @NotNull
+    @ColumnDefault("false")
+    private Boolean signatureSaved;
 
     public Long getId() {
         return id;
@@ -229,6 +238,30 @@ public class Staff {
 
     public void setBadgePrintCount(Integer badgePrintCount) {
         this.badgePrintCount = badgePrintCount;
+    }
+
+    public Boolean getInformationVerified() {
+        return informationVerified;
+    }
+
+    public void setInformationVerified(Boolean informationVerified) {
+        this.informationVerified = informationVerified;
+    }
+
+    public Boolean getPictureSaved() {
+        return pictureSaved;
+    }
+
+    public void setPictureSaved(Boolean pictureSaved) {
+        this.pictureSaved = pictureSaved;
+    }
+
+    public Boolean getSignatureSaved() {
+        return signatureSaved;
+    }
+
+    public void setSignatureSaved(Boolean signatureSaved) {
+        this.signatureSaved = signatureSaved;
     }
 
     public StaffResponse toStaffResponse() {
