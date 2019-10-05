@@ -21,7 +21,7 @@ class UiLoginController {
 
     }
 
-    @RequestMapping(value = "//login", method = RequestMethod.GET)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView loginGet(@RequestParam(value = "error", required = false) String error,
                                  @RequestParam(value = "logout", required = false) String logout) {
 
@@ -30,7 +30,7 @@ class UiLoginController {
         return m;
     }
 
-    @RequestMapping(value = "//confirmlogout", method = RequestMethod.GET)
+    @RequestMapping(value = "/confirmlogout", method = RequestMethod.GET)
     public ModelAndView confirmLogout(@AuthenticationPrincipal User principal) {
 
         ModelAndView m = new ModelAndView();
@@ -38,7 +38,7 @@ class UiLoginController {
         return m;
     }
 
-    @RequestMapping(value = "//logout", method = RequestMethod.GET)
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){
