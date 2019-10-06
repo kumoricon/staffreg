@@ -61,15 +61,12 @@ public class CheckIn {
                                @PathVariable(name = "uuid") String uuid,
                                @RequestParam("imageData") String imageData) {
         Staff s = staffRepository.findByUuid(uuid);
-        System.out.println(imageData);
         try {
-            saveImage(imageData);
+            fileStorageService.storeFile(s.getFirstName() + "_" + s.getLastName() + "_" + s.getUuid() + ".png", imageData);
         } catch (IOException ex) {
             log.error("Error saving image", ex);
             return "ui/checkin/step2?err=Error+saving+image";
         }
-//        fileStorageService.storeFile(file);
-
         s.setPictureSaved(true);
         staffRepository.save(s);
         return "redirect:/checkin3/" + uuid;
@@ -110,28 +107,4 @@ public class CheckIn {
         model.addAttribute("staff", staff);
         return "ui/checkin/step4";
     }
-
-
-    private void saveImage(String data) throws IOException {
-        String[] parts = data.split(",");
-        String imageString = parts[1];
-
-        // create a buffered image
-        BufferedImage image = null;
-        byte[] imageByte;
-
-        Base64.Decoder decoder = Base64.getDecoder();
-        imageByte = decoder.decode(imageString);
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(imageByte)) {
-            image = ImageIO.read(bis);
-        }
-        File outputfile = new File("/tmp/image.png");
-
-        try {
-            ImageIO.write(image, "png", outputfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

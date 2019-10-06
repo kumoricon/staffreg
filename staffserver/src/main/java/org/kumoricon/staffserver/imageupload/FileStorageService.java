@@ -8,17 +8,23 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
+import java.util.Base64;
 
 @Service
 public class FileStorageService {
     private static final Logger log = LoggerFactory.getLogger(FileStorageService.class);
     @Value("${staffreg.file.uploaddir}")
     private String uploadPathString;
+    private final Base64.Decoder decoder = Base64.getDecoder();
 
     private Path uploadPath;
 
@@ -39,6 +45,28 @@ public class FileStorageService {
         }
     }
 
+    public void storeFile(String fileName, String imageData) throws IOException {
+        if(fileName.contains("..")) {
+            throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+        }
+
+        String[] parts = imageData.split(",");
+        String imageString = parts[1];
+
+        BufferedImage image = null;
+        byte[] imageByte;
+
+        imageByte = decoder.decode(imageString);
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(imageByte)) {
+            image = ImageIO.read(bis);
+            Path targetLocation = this.uploadPath.resolve(Instant.now().toEpochMilli() + "-" + fileName);
+
+            File outputFile = targetLocation.toFile();
+
+            ImageIO.write(image, "png", outputFile);
+        }
+    }
+
     @PostConstruct
     public void createDirectories() {
         try {
@@ -48,6 +76,4 @@ public class FileStorageService {
             log.error("Error creating directory", ex);
         }
     }
-
-
 }
