@@ -83,8 +83,18 @@ public class CheckIn {
     }
 
     @RequestMapping(value = "/checkin3/{uuid}", method = RequestMethod.POST)
-    public String checkIn3Post(Model model, @PathVariable(name = "uuid") String uuid) {
+    public String checkIn3Post(Model model,
+                               @PathVariable(name = "uuid") String uuid,
+                               @RequestParam("imageData") String imageData) {
+
         Staff s = staffRepository.findByUuid(uuid);
+        try {
+            fileStorageService.storeFile(s.getFirstName() + "_" + s.getLastName() + "_" + s.getUuid() + "-signature.png", imageData);
+        } catch (IOException ex) {
+            log.error("Error saving image", ex);
+            return "ui/checkin/step3?err=Error+saving+image";
+        }
+
         s.setSignatureSaved(true);
         s.setCheckedIn(true);
         s.setCheckedInAt(Instant.now());

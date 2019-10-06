@@ -1,6 +1,4 @@
 $(document).ready(function() {
-    console.log("Wooo");
-
     // Grab elements, create settings, etc.
     let canvas = document.getElementById('canvas');
     let context = canvas.getContext('2d');
@@ -35,14 +33,18 @@ $(document).ready(function() {
             video.src = window.URL.createObjectURL(stream);
             video.play();
         }, errBack);
+    } else {
+        // Camera not detected/working
+        document.getElementById('imageData').value = data;
+        document.getElementById('save').disabled = false;
+        document.getElementById('snap').innerText = "Webcam not detected";
     }
 
-    // Trigger photo take
+    // Trigger taking photo
     document.getElementById('snap').addEventListener('click', function() {
         context.drawImage(video, 0, 0, 640, 480);
         let data = canvas.toDataURL();
         document.getElementById('imageData').value = data;
         document.getElementById('save').disabled = false;
-
     });
 });
